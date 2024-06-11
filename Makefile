@@ -3,17 +3,16 @@ SHELL :=  /bin/bash
 NAME := cub3d
 SRC_DIR := src
 OBJ_DIR := obj
-#LIBFT_DIR := lib/Libft
-LIBFT := ./inc/libft.a
-HEAD := ./include/cub3d.h
-SOURCES := 	$(SRC_DIR)/
-#MLX42 = MLX42/build/libmlx42.a
-#MLXFLAGS = MLX42/build/libmlx42.a -Iinclude -ldl -lglfw -pthread -lm
+LIBFT := -L. lib/libft/libft.a
+HEAD := inc/cub3d.h
+INC := inc
+SOURCES := 	$(SRC_DIR)/main.c
+MLX42 = lib/MLX42/build/libmlx42.a
+MLXFLAGS = lib/MLX42/build/libmlx42.a -Iinclude -ldl -lglfw -pthread -lm
 
-OBJECTS := $(patsubst $(SRC_DIR)%,$(OBJ_DIR)%,$(SOURCES:.c=.o))
+OBJECTS := $(addprefix $(OBJ_DIR)/, $(notdir $(SRC:.c=.o)))
 CC := cc
-CFLAGS := -Wall -Wextra -Werror
-IFLAGS := -Iinclude -I$(LIBFT_DIR)/include
+CFLAGS := -I $(INC) -Wall -Wextra -Werror
 
 
 GREEN = \x1b[32;01m
@@ -26,14 +25,14 @@ RM = /bin/rm -f
 all: $(NAME)
 
 $(NAME): $(HEAD) $(OBJ_DIR) $(OBJECTS) $(SOURCES)
-	@$(CC) $(CFLAGS) $(IFLAGS) $(SOURCES) $(LIBFT) $(LFLAGS) -o $(NAME)
+	@$(CC) $(CFLAGS) $(SOURCES) $(LIBFT) -o $(NAME)
 	@printf "$(GREEN) $(BOLD)======= Created program $(NAME) ======= $(RESET)\n"
 
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	@$(CC) $(HEADERS) $(CFLAGS) $(IFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) $(LIBFT) $< -o $@
 	@printf "$(YELLOW) $(BOLD)Compiling... $(RESET) $(notdir $<)\n"
 
 clean:
@@ -42,12 +41,8 @@ clean:
 
 fclean: clean
 	@$(RM) -rf $(NAME)
-	@make fclean -C $(LIBFT_DIR)
 	@printf "$(RED) $(BOLD) Deleting $(NAME)... $(RESET)\n"
 
 re: fclean all
-
-run:
-	make && ./minishell
 
 .PHONY: all clean fclean re
