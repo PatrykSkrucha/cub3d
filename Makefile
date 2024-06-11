@@ -3,12 +3,12 @@ SHELL :=  /bin/bash
 NAME := cub3d
 SRC_DIR := src
 OBJ_DIR := obj
-LIBFT := -L. lib/libft/libft.a
-HEAD := inc/cub3d.h
+LIBFT := -L. lib/libft.a
+HEADERS := -I ./inc
 INC := inc
 SOURCES := 	$(SRC_DIR)/main.c
-MLX42 = lib/MLX42/build/libmlx42.a
-MLXFLAGS = lib/MLX42/build/libmlx42.a -Iinclude -ldl -lglfw -pthread -lm
+MLX42 = lib/libmlx42.a  -Iinclude -ldl -lglfw -pthread -lm
+
 
 OBJECTS := $(addprefix $(OBJ_DIR)/, $(notdir $(SRC:.c=.o)))
 CC := cc
@@ -24,15 +24,15 @@ RM = /bin/rm -f
 
 all: $(NAME)
 
-$(NAME): $(HEAD) $(OBJ_DIR) $(OBJECTS) $(SOURCES)
-	@$(CC) $(CFLAGS) $(SOURCES) $(LIBFT) -o $(NAME)
+$(NAME): $(OBJ_DIR) $(OBJECTS) $(SOURCES)
+	@$(CC) $(CFLAGS) $(SOURCES) $(LIBFT) $(MLX42) -o $(NAME)
 	@printf "$(GREEN) $(BOLD)======= Created program $(NAME) ======= $(RESET)\n"
 
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	@$(CC) $(CFLAGS) $(LIBFT) $< -o $@
+	@$(CC) $(CFLAGS) $(HEADERS) $< -o $@
 	@printf "$(YELLOW) $(BOLD)Compiling... $(RESET) $(notdir $<)\n"
 
 clean:
