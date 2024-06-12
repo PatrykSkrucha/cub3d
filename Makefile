@@ -12,7 +12,7 @@ MLX42 = lib/libmlx42.a  -Iinclude -ldl -lglfw -pthread -lm
 
 OBJECTS := $(addprefix $(OBJ_DIR)/, $(notdir $(SRC:.c=.o)))
 CC := cc
-CFLAGS := -I $(INC) -Wall -Wextra -Werror
+CFLAGS := -I $(INC) -Wall -Wextra -Werror -g
 
 
 GREEN = \x1b[32;01m

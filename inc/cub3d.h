@@ -14,6 +14,20 @@
 #  define HEIGHT 850
 # endif
 
+typedef enum s_token
+{
+	EMPTY_LINE,
+	MATRIX,
+	INFO,
+	ERROR,
+} t_token;
+
+typedef enum s_action
+{
+	MAP,
+	PARAMS,
+} t_action;
+
 typedef struct s_rgb
 {
 	int	R;
@@ -36,5 +50,6 @@ typedef struct s_main
 
 void	scan_map(char **argv, t_main	*main);
 void	error_exit(char *message);
+void	double_free(char **str);
 
 #endif
