@@ -121,42 +121,42 @@ t_action what_to_do(t_main *main)
 	return (MAP); //if we have all parameters done we have to do map parsing
 }
 
-// void	alloc_matrix(char *path, t_main *main)
-// {
-// 	t_token	token;
-// 	t_token	prev_token;
-// 	char	*line;
-// 	int		i;
-// 	bool	matrix_check;
+void	alloc_matrix(char *path, t_main *main)
+{
+	t_token	token;
+	t_token	prev_token;
+	char	*line;
+	int		i;
+	bool	matrix_check;
 
-// 	i = 0;
-// 	matrix_check = false;
-// 	main->fd = open(path, O_RDONLY);
-// 	if (main->fd == -1)
-// 	{
-// 		close(main->fd);
-// 		error_exit("Can't access the map");
-// 	}
-// 	prev_token = MATRIX;
-// 	while (1)
-// 	{
-// 		line = get_next_line(main->fd);
-// 		if (!line)
-// 			break ;
-// 		token = check_token(line);
-// 		if (prev_token == EMPTY_LINE && token == MATRIX && matrix_check)
-// 			error_exit("Error while parsing the map.");
-// 		if (token == MATRIX)
-// 		{
-// 			matrix_check = true;
-// 			i++;
-// 		}
-// 		prev_token = token;
-// 	}
-// 	close(main->fd);
-// 	main->map = ptr_check(ft_calloc(i, sizeof(char*)));
-// 	printf("map height: %i\n", i);
-// }
+	i = 0;
+	matrix_check = false;
+	main->fd = open(path, O_RDONLY);
+	if (main->fd == -1)
+	{
+		close(main->fd);
+		error_exit("Can't access the map");
+	}
+	prev_token = MATRIX;
+	while (1)
+	{
+		line = get_next_line(main->fd);
+		if (!line)
+			break ;
+		token = check_token(line);
+		if (prev_token == EMPTY_LINE && token == MATRIX && matrix_check)
+			error_exit("Error while parsing the map. Empty line alloc matrix");
+		if (token == MATRIX)
+		{
+			matrix_check = true;
+			i++;
+		}
+		prev_token = token;
+	}
+	close(main->fd);
+	main->map = ptr_check(ft_calloc(i, sizeof(char*)));
+	printf("map height: %i\n", i);
+}
 
 void	print_token(t_token token)
 {
@@ -223,12 +223,32 @@ int	invalid_color(char *color)
 	return (0);
 }
 
+int	comma_check(char *color)
+{
+	int	i;
+	int	counter;
+
+	i = 0;
+	counter = 0;
+	while (color[i])
+	{
+		if (color[i] == ',')
+			counter++;
+		i++;
+	}
+	if (counter != 2)
+		return (1);
+	return (0);
+}
+
 char	**get_rgb(char **args)
 {
 	char	**rgb;
 	int		i;
 
 	i = 0;
+	if (comma_check(args[1]))
+		error_exit("Error while parsing the map COMMA");
 	rgb = ptr_check(ft_split(args[1], ','));
 	if (double_strlen(rgb) != 3)  //here only R, G, B
 		error_exit("Error while parsing the map");
@@ -316,7 +336,6 @@ void	do_params(t_main *main, char *line)
 	char		*line_no_nl;
 
 	line_no_nl = remove_nl(line);
-
 	args = ptr_check(ft_split(line_no_nl, ' '));
 	params = what_params(args[0]);
 	if (params == CEILING)
@@ -334,54 +353,57 @@ void	do_params(t_main *main, char *line)
 	double_free(args);
 }
 
+void	parse_map(t_main *main, char *line)
+{
+	static int	i = 0;
+
+	
+}
+
 void scan_map(char **argv, t_main	*main)
 {
 	char		*line;
 	t_token		token;
 	t_action	action;
 	t_action	expected_move;
-	t_token		prev_token;
-	bool		first_matrix;
+	// t_token		prev_token;
+	// bool		first_matrix;
 
-	(void)token;
-	(void)action;
-	first_matrix = false;
-	main->fd = open(argv[0], O_RDONLY);
+	// first_matrix = false;
 	expected_move = PARAMS; //initially we have to start with filling parameters like walls, color of ceiling and floor, then handle map
+	(void)main;
+	// prev_token = MATRIX;
+	alloc_matrix(argv[0], main);
+	main->fd = open(argv[0], O_RDONLY);
 	if (main->fd == -1)
 	{
 		close(main->fd);
 		error_exit("Can't access the map");
 	}
-	(void)main;
-	prev_token = MATRIX;
-	// alloc_matrix(argv[0], main);
 	while (1)
 	{
 		line = get_next_line(main->fd);
 		if (!line)
 			break ;
-		// printf("here\n");
-		// line = ft_strtrim(get_next_line(fd), " ");
 		//check for params()
 		token = check_token(line);
-		if (token == MATRIX)
-			first_matrix = true;
+		// if (token == MATRIX)
+		// 	first_matrix = true;
 		expected_move = what_to_do(main);
 		action = look_for_action(token, expected_move);
 		print_token(token);
 		print_action(expected_move);
-		if (prev_token == EMPTY_LINE && token == MATRIX)
-			error_exit("Error while parsing the map(empty line between map)");
+		// if (prev_token == EMPTY_LINE && token == MATRIX)
+		// 	error_exit("Error while parsing the map(empty line between map)");
 		//maybe somewhere before do extra scanning to know how big matrix for map must be
 		if (action == EXIT)
 			error_exit("Error while parsing the map");
 		if (action == PARAMS)
 			do_params(main, line);
-		// if (action == MAP)
-		// 	parse_map(main)
-		if (first_matrix)
-			prev_token = token;
+		if (action == MAP)
+			parse_map(main);
+		// if (first_matrix)
+		// 	prev_token = token;
 
 		//action = info_or_map(main); //this here only if token != empty line  check if we can start with scanning map
 		//check if token == empty line, then action != MAP, if yes, error and exit, empty lines can be placed at the end as well

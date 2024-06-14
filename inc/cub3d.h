@@ -24,7 +24,7 @@ typedef enum e_token
 
 typedef enum e_action
 {
-	MAP,
+	DO_MAP,
 	PARAMS,
 	SKIP,
 	EXIT,
@@ -91,5 +91,6 @@ void	error_exit(char *message);
 void	double_free(char **str);
 void	*ptr_check(void *ptr);
 int		double_strlen(char **arr);
+t_main	*init_main(void);
 
 #endif
