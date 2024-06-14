@@ -22,3 +22,22 @@ void	double_free(char **str)
 	}
 	free(str);
 }
+
+void	*ptr_check(void *ptr)
+{
+	if (!ptr)
+		error_exit("Malloc failure.");
+	return (ptr);
+}
+
+int	double_strlen(char **arr)
+{
+	int	i;
+
+	i = 0;
+	if (!arr)
+		return (0);
+	while (arr[i])
+		i++;
+	return (i);
+}

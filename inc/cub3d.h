@@ -14,7 +14,7 @@
 #  define HEIGHT 850
 # endif
 
-typedef enum s_token
+typedef enum e_token
 {
 	EMPTY_LINE,
 	MATRIX,
@@ -22,11 +22,31 @@ typedef enum s_token
 	ERROR,
 } t_token;
 
-typedef enum s_action
+typedef enum e_action
 {
 	MAP,
 	PARAMS,
+	SKIP,
+	EXIT,
 } t_action;
+
+typedef enum e_direction
+{
+	N,
+	E,
+	S,
+	W,
+} t_direction;
+
+typedef enum e_params
+{
+	FLOOR,
+	CEILING,
+	NO,
+	EA,
+	SO,
+	WE,
+} t_params;
 
 typedef struct s_rgb
 {
@@ -35,21 +55,41 @@ typedef struct s_rgb
 	int	B;
 } t_rgb;
 
+typedef struct s_point
+{
+	float	x;
+	float	y;
+} t_point;
+
+typedef struct s_player
+{
+	t_point		*position;
+	t_direction	direction;
+} t_player;
+
+typedef struct s_wall
+{
+	char	*path;
+} t_wall;
+
 typedef struct s_main
 {
 	mlx_t		*window;
 	mlx_image_t	*image;
 	char		**map;
-	int			NO;
-	int			SO;
-	int			WE;
-	int			EA;
+	t_wall		*NO;
+	t_wall		*SO;
+	t_wall		*WE;
+	t_wall		*EA;
 	t_rgb		*floor;
 	t_rgb		*ceiling;
+	int			fd;
 } t_main;
 
 void	scan_map(char **argv, t_main	*main);
 void	error_exit(char *message);
 void	double_free(char **str);
+void	*ptr_check(void *ptr);
+int		double_strlen(char **arr);
 
 #endif
