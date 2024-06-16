@@ -1,5 +1,4 @@
 
-set args "maps/not_valid/1_open.cub"
+set args "maps/1.cub"
 
-break scanner.c:336
-condition 1 y == 7 
+break scanner.c:498

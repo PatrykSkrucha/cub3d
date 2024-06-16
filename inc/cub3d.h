@@ -107,5 +107,7 @@ void	do_ea_wall(t_main *main, char **args);
 int		ft_isspace(int c);
 void	print_token(t_token token);
 void	print_action(t_action action);
+char	*strtrim_space_col(char	**str, int x, int height);
+char	*strtrim_space_row(char *s1);
 
 #endif

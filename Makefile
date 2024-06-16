@@ -26,7 +26,7 @@ RM = /bin/rm -f
 all: $(NAME)
 
 $(NAME): $(OBJ_DIR) $(OBJECTS) $(SOURCES)
-	@$(CC) $(CFLAGS) $(SOURCES) $(LIBFT) $(MLX42) -o $(NAME)
+	@$(CC) $(CFLAGS) $(SOURCES) $(LIBFT) -o $(NAME)
 	@printf "$(GREEN) $(BOLD)======= Created program $(NAME) ======= $(RESET)\n"
 
 $(OBJ_DIR):

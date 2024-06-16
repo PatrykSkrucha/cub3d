@@ -54,11 +54,11 @@ char	**get_rgb(char **args)
 		error_exit("Error while parsing the map COMMA");
 	rgb = ptr_check(ft_split(args[1], ','));
 	if (double_strlen(rgb) != 3)  //here only R, G, B
-		error_exit("Error while parsing the map");
+		error_exit("Error while parsing the map rgb");
 	while (rgb[i])
 	{
 		if (ft_strlen(rgb[i]) > 3 || not_number(rgb[i]) || invalid_color(rgb[i]))
-			error_exit("Error while parsing the map");
+			error_exit("Error while parsing the map rgb");
 		i++;
 	}
 	return (rgb);

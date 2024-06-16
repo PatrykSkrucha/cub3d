@@ -45,8 +45,14 @@ int	check_for_matrix(char *line)
 	i = 0;
 	while (line[i])
 	{
+		if (ft_isspace(line[i]) && line[i] != ' ')
+			error_exit("Space is only acceptable whitespace in map.");
 		if (!ft_strchr(" 01NSEA", line[i]))
-			error_exit("Error while parsing the map.");
+		{
+			printf("line: %s\n", line);
+			printf("char: >%c<\n", line[i]);
+			error_exit("Error while parsing the map wrong char map.");
+		}
 		i++;
 	}
 	return (1);
@@ -75,6 +81,7 @@ static t_token	check_token (char *line)
 
 	line = ft_strtrim(line, " ");
 	str = remove_nl(line);
+	//printf("line: %s\n", line);
 	if (!str)
 		return (free(str), EMPTY_LINE);
 	if (check_line_info(str))
@@ -111,6 +118,20 @@ t_action what_to_do(t_main *main)
 	return (DO_MAP); //if we have all parameters done we have to do map parsing
 }
 
+int	strlen_no_ws_end(char *str)
+{
+	int	i;
+
+	i = ft_strlen(str) - 1;
+	while (i > 0)
+	{
+		if (!ft_isspace(str[i]))
+			break ;
+		i--;
+	}
+	return (i + 1);
+}
+
 void	alloc_matrix(char *path, t_main *main)
 {
 	t_token	token;
@@ -138,8 +159,8 @@ void	alloc_matrix(char *path, t_main *main)
 			error_exit("Error while parsing the map. Empty line alloc matrix");
 		if (token == MAP)
 		{
-			if (main->width < (int)ft_strlen(line) - 1)
-				main->width = ft_strlen(line) - 1;
+			if (main->width <  strlen_no_ws_end(line))
+				main->width = strlen_no_ws_end(line);
 			matrix_check = true;
 			i++;
 		}
@@ -148,6 +169,7 @@ void	alloc_matrix(char *path, t_main *main)
 	close(main->fd);
 	main->map = ptr_check(ft_calloc(i + 1, sizeof(char*)));
 	main->height = i;
+	//printf("width: %i\n", main->width);
 }
 
 
@@ -174,9 +196,9 @@ void	do_ceiling(t_main *main, char **args)
 	char	**rgb;
 
 	if (double_strlen(args) != 2) //must contain only C and RGB color (e.g. C 99,99,99)
-		error_exit("Error while parsing the map");
+		error_exit("Error while parsing the map ceiling");
 	if (main->ceiling)
-		error_exit("Error while parsing the map");
+		error_exit("Error while parsing the map ceiling");
 	main->ceiling = ptr_check(ft_calloc(1, sizeof(t_rgb)));
 	rgb = get_rgb(args);
 	main->ceiling->R = ft_atoi(rgb[0]);
@@ -238,6 +260,26 @@ char	*add_extra_spaces(char *line, int len)
 	return (str);
 }
 
+char	*remove_sufix_whitespace(char *str)
+{
+	char	*str1;
+	int		i;
+
+	if (!str)
+		return (NULL);
+	i = ft_strlen(str) - 1;
+	while (str[i])
+	{
+		if (!ft_isspace(str[i]))
+			break ;
+		i--;
+	}
+	str1 = ptr_check(ft_substr(str, 0, i + 1));
+	//printf("Without white space end: >%s<\n", str1);
+	free(str);
+	return (str1);
+}
+
 void	fill_map(t_main *main, char *line)
 {
 	static int	i = -1;
@@ -245,9 +287,13 @@ void	fill_map(t_main *main, char *line)
 
 
 	line_no_nl = remove_nl(line);
+	//printf("wit sufix ws \t>%s<\n", line_no_nl);
+	line_no_nl = remove_sufix_whitespace(line_no_nl);
+	//printf("without sufix ws\t >%s<\n", line_no_nl);
 	if (line_no_nl)
 		line_no_nl = add_extra_spaces(line_no_nl, main->width);
 	i++;
+	//printf(">%s<\n", line_no_nl);
 	if (!line)
 	{
 		main->map[i] = NULL;
@@ -325,64 +371,163 @@ int	strlen_no_ws(char *str)
 	return (i);
 }
 
-void	check_r_l_walls(int height, int width, char **map)
+int	last_no_space(char *str)
 {
-	int	y;
-	int	x;
+	int	i;
 
-	y = 0;
-	while (y < height)
+	i = ft_strlen(str) - 1;
+	while (i > 0)
 	{
-		x = 0;
-		while (x < width)
+		if (!ft_isspace(str[i]))
+			return (i);
+		i--;
+	}
+	return (i);
+}
+
+
+
+//void	check_r_l_walls(int height, int width, char **map)
+//{
+//	int		y;
+//	int		x;
+//	char	*trimmed;
+//	int		delimiter;
+
+//	y = 0;
+//	printf("width: %i\n", width);
+//	while (y < height)
+//	{
+//		x = 0;
+//		trimmed = ft_strtrim(map[y], " ");
+//		delimiter = last_no_space(trimmed) + 1;
+//		while (x < delimiter)
+//		{
+//			while (x < delimiter && ft_isspace(trimmed[x]))
+//				x++;
+//			if (x < delimiter && trimmed[x] != '1')
+//			{
+//				printf("x: %i, y: %i", x, y);
+//				error_exit("Map must be closed. left side");
+//			}
+//			while (x < delimiter && !ft_isspace(trimmed[x]))
+//				x++;
+//			if (x <= delimiter  && trimmed[x - 1] != '1')
+//			{
+//				printf("x: %i, y: %i", x, y);
+//				error_exit("Map must be closed. right side1");
+//			}
+//			//else if (x < delimiter && trimmed[x -1] != '1')
+//			//{
+//			//	printf("x: %i, y: %i", x, y);
+//			//	error_exit("Map must be closed. right side2");
+//			//}
+//			x++;
+//		}
+//		y++;
+//	}
+//}
+//void	check_t_b_walls(int height, int width, char **map)
+//{
+//	int	y;
+//	int	x;
+
+//	x = 0;
+//	while (x < width)
+//	{
+//		y = 0;
+//		while (y < height)
+//		{
+//			while (y < height && ft_isspace(map[y][x]))
+//				y++;
+//			if (y < height && map[y][x] != '1')
+//				error_exit("Map must be closed. top side");
+//			while (y < height && !ft_isspace(map[y][x]))
+//				y++;
+//			if (y < height && map[y - 1][x] != '1')
+//			{
+//				printf("%c\n", map[y - 1][x]);
+//				error_exit("Map must be closed. bottom side");
+//			}
+//		}
+//		x++;
+//	}
+//}
+
+void	check_rows(char **map)
+{
+	int	i;
+	char	*str;
+	int		j;
+
+	i = 0;
+	while (map[i])
+	{
+		str = strtrim_space_row(map[i]);
+		j = 0;
+		while (str[j])
 		{
-			while (x < width && ft_isspace(map[y][x]))
-				x++;
-			if (x < width && map[y][x] != '1')
+			while (str[j] && str[j] == ' ')
+				j++;
+			if (str[j] != '1')
 			{
-				printf("x: %i, y: %i", x, y);
-				error_exit("Map must be closed. left side");
+				printf("col %i >%s<\n", i, str);
+				error_exit("Row open on the left side.");
 			}
-			while (x < width && !ft_isspace(map[y][x]))
-				x++;
-			if (x <= width  && map[y][x - 1] != '1')
-			{
-				printf("x: %i, y: %i", x, y);
-				error_exit("Map must be closed. right side");
-			}
-			x++;
+			while (str[j] && str[j] != ' ')
+				j++;
+			j--;
+			if (str[j] != '1')
+				error_exit("Row open on the right side.");
+			j++;
 		}
-		y++;
+		//printf("%s\n", str);
+		free(str);
+		i++;
 	}
 }
-void	check_t_b_walls(int height, int width, char **map)
-{
-	int	y;
-	int	x;
 
-	x = 0;
-	while (x < width)
+void	check_columns(int height, char **map)
+{
+	char	*str;
+	int		i;
+	int		j;
+
+	i = 0;
+	while (map[0][i])
 	{
-		y = 0;
-		while (y < height)
+		str = strtrim_space_col(map, i, height);
+		j = 0;
+		//printf("cols\n");
+		while (str != NULL && str[j])
 		{
-			while (y < height && ft_isspace(map[y][x]))
-				y++;
-			if (y < height && map[y][x] != '1')
-				error_exit("Map must be closed. top side");
-			while (y < height && !ft_isspace(map[y][x]))
-				y++;
-			if (y < height && map[y - 1][x] != '1')
-				error_exit("Map must be closed. bottom side");
+			while (str[j] && str[j] == ' ')
+				j++;
+			if (str[j] != '1')
+			{
+
+				printf("col %i >%s<\n", i, str);
+				error_exit("Column open on top");
+			}
+			while (str[j] && str[j] != ' ')
+				j++;
+			j--;
+			if (str[j] != '1')
+				error_exit("Column open on bottom");
+			j++;
 		}
-		x++;
+		if (str)
+			free(str);
+		i++;
 	}
+	//printf("\n\n");
 }
 
 void	check_borders(char **map, int height, int width)
 {
-	check_r_l_walls(height, width, map);
-	check_t_b_walls(height, width, map);
+	(void)width;
+	check_rows(map);
+	check_columns(height, map);
 }
 
 void	print_map(char **map)
@@ -390,11 +535,13 @@ void	print_map(char **map)
 	int	i;
 
 	i = 0;
+	printf("map:\n\n");
 	while (map[i])
 	{
-		printf("%s<\n", map[i]);
+		printf(">%s<\n", map[i]);
 		i++;
 	}
+	printf("\n");
 }
 
 void scan_map(char **argv, t_main	*main)
@@ -421,7 +568,7 @@ void scan_map(char **argv, t_main	*main)
 		expected_move = what_to_do(main);
 		action = look_for_action(token, expected_move);
 		if (action == EXIT)
-			error_exit("Error while parsing the map");
+			error_exit("Error while parsing the map action exit");
 		if (action == PARAMS)
 			do_params(main, line);
 		if (action == DO_MAP)
@@ -429,7 +576,8 @@ void scan_map(char **argv, t_main	*main)
 		free(line);
 	}
 	fill_map(main, NULL);
+	//print_map(main->map);
 	check_borders(main->map, main->height, main->width);
-	check_player(main);
+	//check_player(main);
 	close(main->fd);
 }
