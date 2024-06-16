@@ -18,8 +18,6 @@ int	empty_line(char *line)
 	return (1);
 }
 
-//NO, SO, WE, EA, F, C
-
 int check_line_info(char *line)
 {
 	char	**arr;
@@ -59,6 +57,8 @@ char	*remove_nl(char *line)
 	char	*str;
 	int		i;
 
+	if (!line)
+		return (NULL);
 	if (!ft_strrchr(line, '\n'))
 		return (ft_strdup(line));
 	i = ft_strlen(line);
@@ -76,21 +76,11 @@ static t_token	check_token (char *line)
 	line = ft_strtrim(line, " ");
 	str = remove_nl(line);
 	if (!str)
-	{
-		// printf("empty line\n");
 		return (free(str), EMPTY_LINE);
-	}
 	if (check_line_info(str))
-	{
-		// printf("info\n");
 		return (free(str), INFO);
-	}
 	if (check_for_matrix(str))
-	{
-		// printf("matrix\n");
-		return (free(str), MATRIX);
-	}
-	// printf("\n\n\n\n>>>error<<<\n\n\n\n");
+		return (free(str), MAP);
 	return (free(str), ERROR);
 }
 
@@ -98,19 +88,19 @@ t_action	look_for_action(t_token token, t_action	expected_move)
 {
 	if (token == EMPTY_LINE && expected_move == PARAMS)
 		return (SKIP);
-	// if (token == EMPTY_LINE && expected_move == MAP)
-	// 	return (EXIT);
-	if (token == MATRIX && expected_move == MAP)
-		return (MAP);
-	if (token == MATRIX && expected_move == PARAMS)
+	if (token == EMPTY_LINE && expected_move == DO_MAP)
+		return (SKIP);
+	if (token == MAP && expected_move == DO_MAP)
+		return (DO_MAP);
+	if (token == MAP && expected_move == PARAMS)
 		return (EXIT);
-	if (token == INFO && expected_move == MAP)
+	if (token == INFO && expected_move == DO_MAP)
 		return (EXIT);
 	if (token == INFO && expected_move == PARAMS)
 		return (PARAMS);
 	if (token == ERROR)
 		return (EXIT);
-	return (MAP);
+	return (DO_MAP);
 }
 
 t_action what_to_do(t_main *main)
@@ -118,7 +108,7 @@ t_action what_to_do(t_main *main)
 	//if ceiling, floor or walls doesn't exist we have to get info about these variables first
 	if (!main->ceiling || !main->floor || !main->NO || !main->EA || !main->SO || !main->EA)
 		return (PARAMS);
-	return (MAP); //if we have all parameters done we have to do map parsing
+	return (DO_MAP); //if we have all parameters done we have to do map parsing
 }
 
 void	alloc_matrix(char *path, t_main *main)
@@ -128,7 +118,7 @@ void	alloc_matrix(char *path, t_main *main)
 	char	*line;
 	int		i;
 	bool	matrix_check;
-
+	
 	i = 0;
 	matrix_check = false;
 	main->fd = open(path, O_RDONLY);
@@ -137,48 +127,30 @@ void	alloc_matrix(char *path, t_main *main)
 		close(main->fd);
 		error_exit("Can't access the map");
 	}
-	prev_token = MATRIX;
+	prev_token = MAP;
 	while (1)
 	{
 		line = get_next_line(main->fd);
 		if (!line)
 			break ;
 		token = check_token(line);
-		if (prev_token == EMPTY_LINE && token == MATRIX && matrix_check)
+		if (prev_token == EMPTY_LINE && token == MAP && matrix_check)
 			error_exit("Error while parsing the map. Empty line alloc matrix");
-		if (token == MATRIX)
+		if (token == MAP)
 		{
+			if (main->width < (int)ft_strlen(line) - 1)
+				main->width = ft_strlen(line) - 1;
 			matrix_check = true;
 			i++;
 		}
 		prev_token = token;
 	}
 	close(main->fd);
-	main->map = ptr_check(ft_calloc(i, sizeof(char*)));
-	printf("map height: %i\n", i);
+	main->map = ptr_check(ft_calloc(i + 1, sizeof(char*)));
+	main->height = i;
 }
 
-void	print_token(t_token token)
-{
-	const char	*type_token[] = {
-		[EMPTY_LINE] = "empty line",
-		[MATRIX] = "matrix",
-		[INFO] = "info",
-		[ERROR] = "error",
-	};
-	printf("token: %s\n", type_token[token]);
-}
 
-void	print_action(t_action action)
-{
-	const char *type_action[] = {
-		[MAP] = "map",
-		[PARAMS] = "params",
-		[SKIP] = "skip",
-		[EXIT] = "exit",
-	};
-	printf("action: %s\n", type_action[action]);
-}
 
 t_params	what_params(char *line)
 {
@@ -197,70 +169,6 @@ t_params	what_params(char *line)
 	return (-1);
 }
 
-int	not_number(char *color)
-{
-	int	i;
-
-	i = 0;
-	while (color[i])
-	{
-		if (!ft_isdigit(color[i]))
-		{
-
-			printf("not number? >%c<\n", color[i]);
-
-			return (1);
-		}
-		i++;
-	}
-	return (0);
-}
-
-int	invalid_color(char *color)
-{
-	if (ft_atoi(color) > 255)
-		return (1);
-	return (0);
-}
-
-int	comma_check(char *color)
-{
-	int	i;
-	int	counter;
-
-	i = 0;
-	counter = 0;
-	while (color[i])
-	{
-		if (color[i] == ',')
-			counter++;
-		i++;
-	}
-	if (counter != 2)
-		return (1);
-	return (0);
-}
-
-char	**get_rgb(char **args)
-{
-	char	**rgb;
-	int		i;
-
-	i = 0;
-	if (comma_check(args[1]))
-		error_exit("Error while parsing the map COMMA");
-	rgb = ptr_check(ft_split(args[1], ','));
-	if (double_strlen(rgb) != 3)  //here only R, G, B
-		error_exit("Error while parsing the map");
-	while (rgb[i])
-	{
-		if (ft_strlen(rgb[i]) > 3 || not_number(rgb[i]) || invalid_color(rgb[i]))
-			error_exit("Error while parsing the map");
-		i++;
-	}
-	return (rgb);
-}
-
 void	do_ceiling(t_main *main, char **args)
 {
 	char	**rgb;
@@ -276,58 +184,7 @@ void	do_ceiling(t_main *main, char **args)
 	main->ceiling->B = ft_atoi(rgb[2]);
 	double_free(rgb);
 }
-void	do_floor(t_main *main, char **args)
-{
-	char	**rgb;
 
-	if (double_strlen(args) != 2) //must contain only C and RGB color (e.g. C 99,99,99)
-		error_exit("Error while parsing the map");
-	if (main->floor)
-		error_exit("Error while parsing the map");
-	main->floor = ptr_check(ft_calloc(1, sizeof(t_rgb)));
-	rgb = get_rgb(args);
-	main->floor->R = ft_atoi(rgb[0]);
-	main->floor->G = ft_atoi(rgb[1]);
-	main->floor->B = ft_atoi(rgb[2]);
-	double_free(rgb);
-}
-
-void	do_no_wall(t_main *main, char **args)
-{
-	if (double_strlen(args) != 2) //must contain only WALL and path (e.g. EA img/a)
-		error_exit("Error while parsing the map");
-	if (main->NO)
-		error_exit("Error while parsing the map");
-	main->NO = ptr_check(ft_calloc(1, sizeof(t_wall)));
-	main->NO->path = ptr_check(ft_strdup(args[1])); //still don't know if path is valid
-}
-void	do_so_wall(t_main *main, char **args)
-{
-	if (double_strlen(args) != 2) //must contain only WALL and path (e.g. EA img/a)
-		error_exit("Error while parsing the map");
-	if (main->SO)
-		error_exit("Error while parsing the map");
-	main->SO = ptr_check(ft_calloc(1, sizeof(t_wall)));
-	main->SO->path = ptr_check(ft_strdup(args[1])); //still don't know if path is valid
-}
-void	do_we_wall(t_main *main, char **args)
-{
-	if (double_strlen(args) != 2) //must contain only WALL and path (e.g. EA img/a)
-		error_exit("Error while parsing the map");
-	if (main->WE)
-		error_exit("Error while parsing the map");
-	main->WE = ptr_check(ft_calloc(1, sizeof(t_wall)));
-	main->WE->path = ptr_check(ft_strdup(args[1])); //still don't know if path is valid
-}
-void	do_ea_wall(t_main *main, char **args)
-{
-	if (double_strlen(args) != 2) //must contain only WALL and path (e.g. EA img/a)
-		error_exit("Error while parsing the map");
-	if (main->EA)
-		error_exit("Error while parsing the map");
-	main->EA = ptr_check(ft_calloc(1, sizeof(t_wall)));
-	main->EA->path = ptr_check(ft_strdup(args[1])); //still don't know if path is valid
-}
 
 void	do_params(t_main *main, char *line)
 {
@@ -353,11 +210,191 @@ void	do_params(t_main *main, char *line)
 	double_free(args);
 }
 
-void	parse_map(t_main *main, char *line)
+char	*strjoin_free(char *to_free, char *str)
 {
-	static int	i = 0;
+	char	*new_str;
 
-	
+	new_str = ptr_check(ft_strjoin(to_free, str));
+	if (to_free)
+		free(to_free);
+	return (new_str);
+}
+
+char	*add_extra_spaces(char *line, int len)
+{
+	int		i;
+	char	*str;
+
+	if ((int)ft_strlen(line) == len)
+		return (line);
+	i = len - (int)ft_strlen(line);
+	str = ptr_check(ft_strdup(line));
+	free(line);
+	while (i > 0)
+	{
+		str = ptr_check(strjoin_free(str, " "));
+		i--;
+	}
+	return (str);
+}
+
+void	fill_map(t_main *main, char *line)
+{
+	static int	i = -1;
+	char		*line_no_nl;
+
+
+	line_no_nl = remove_nl(line);
+	if (line_no_nl)
+		line_no_nl = add_extra_spaces(line_no_nl, main->width);
+	i++;
+	if (!line)
+	{
+		main->map[i] = NULL;
+		return ;
+	}
+	else
+		main->map[i] = ptr_check(ft_strdup(line_no_nl));
+	free(line_no_nl);
+}
+
+void	check_player(t_main *main)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (main->map[i])
+	{
+		j = 0;
+		while (main->map[i][j])
+		{
+			if (ft_strchr("NSEA", main->map[i][j]))
+			{
+				if (main->player)
+					error_exit("It's a single player game.");
+				main->player = ptr_check(ft_calloc(1, sizeof(t_player)));
+				main->player->position = ptr_check(ft_calloc(1, sizeof(t_point)));
+				main->player->position->x = j;
+				main->player->position->y = i;
+				main->player->direction = main->map[i][j];
+			}
+			j++;
+		}
+		i++;
+	}
+	if (!main->player)
+		error_exit("Player not found.");
+}
+
+int	find_first_char(char *line)
+{
+	int	i;
+
+	i = 0;
+	while (line[i])
+	{
+		if (!ft_isspace(line[i]))
+			break ;
+		i++;
+	}
+	return (i);
+}
+
+int	find_last_char(char *line)
+{
+	int	i;
+
+	i = ft_strlen(line) - 1;
+	while (i >= 0)
+	{
+		if (!ft_isspace(line[i]))
+			break ;
+		i--;
+	}
+	return (i);
+}
+
+int	strlen_no_ws(char *str)
+{
+	int	i;
+
+	i = find_last_char(str) - find_first_char(str);
+	if (i < 0)
+		return (0);
+	return (i);
+}
+
+void	check_r_l_walls(int height, int width, char **map)
+{
+	int	y;
+	int	x;
+
+	y = 0;
+	while (y < height)
+	{
+		x = 0;
+		while (x < width)
+		{
+			while (x < width && ft_isspace(map[y][x]))
+				x++;
+			if (x < width && map[y][x] != '1')
+			{
+				printf("x: %i, y: %i", x, y);
+				error_exit("Map must be closed. left side");
+			}
+			while (x < width && !ft_isspace(map[y][x]))
+				x++;
+			if (x <= width  && map[y][x - 1] != '1')
+			{
+				printf("x: %i, y: %i", x, y);
+				error_exit("Map must be closed. right side");
+			}
+			x++;
+		}
+		y++;
+	}
+}
+void	check_t_b_walls(int height, int width, char **map)
+{
+	int	y;
+	int	x;
+
+	x = 0;
+	while (x < width)
+	{
+		y = 0;
+		while (y < height)
+		{
+			while (y < height && ft_isspace(map[y][x]))
+				y++;
+			if (y < height && map[y][x] != '1')
+				error_exit("Map must be closed. top side");
+			while (y < height && !ft_isspace(map[y][x]))
+				y++;
+			if (y < height && map[y - 1][x] != '1')
+				error_exit("Map must be closed. bottom side");
+		}
+		x++;
+	}
+}
+
+void	check_borders(char **map, int height, int width)
+{
+	check_r_l_walls(height, width, map);
+	check_t_b_walls(height, width, map);
+}
+
+void	print_map(char **map)
+{
+	int	i;
+
+	i = 0;
+	while (map[i])
+	{
+		printf("%s<\n", map[i]);
+		i++;
+	}
 }
 
 void scan_map(char **argv, t_main	*main)
@@ -366,13 +403,8 @@ void scan_map(char **argv, t_main	*main)
 	t_token		token;
 	t_action	action;
 	t_action	expected_move;
-	// t_token		prev_token;
-	// bool		first_matrix;
 
-	// first_matrix = false;
-	expected_move = PARAMS; //initially we have to start with filling parameters like walls, color of ceiling and floor, then handle map
-	(void)main;
-	// prev_token = MATRIX;
+	expected_move = PARAMS;
 	alloc_matrix(argv[0], main);
 	main->fd = open(argv[0], O_RDONLY);
 	if (main->fd == -1)
@@ -385,35 +417,19 @@ void scan_map(char **argv, t_main	*main)
 		line = get_next_line(main->fd);
 		if (!line)
 			break ;
-		//check for params()
 		token = check_token(line);
-		// if (token == MATRIX)
-		// 	first_matrix = true;
 		expected_move = what_to_do(main);
 		action = look_for_action(token, expected_move);
-		print_token(token);
-		print_action(expected_move);
-		// if (prev_token == EMPTY_LINE && token == MATRIX)
-		// 	error_exit("Error while parsing the map(empty line between map)");
-		//maybe somewhere before do extra scanning to know how big matrix for map must be
 		if (action == EXIT)
 			error_exit("Error while parsing the map");
 		if (action == PARAMS)
 			do_params(main, line);
-		if (action == MAP)
-			parse_map(main);
-		// if (first_matrix)
-		// 	prev_token = token;
-
-		//action = info_or_map(main); //this here only if token != empty line  check if we can start with scanning map
-		//check if token == empty line, then action != MAP, if yes, error and exit, empty lines can be placed at the end as well
-		//if done do map scanning
-		//check if there's only one player on the map
-		//check if map is closed 
-		//check for empty lines between map
-
-		printf("%s", line);
+		if (action == DO_MAP)
+			fill_map(main, line);
 		free(line);
 	}
+	fill_map(main, NULL);
+	check_borders(main->map, main->height, main->width);
+	check_player(main);
 	close(main->fd);
 }

@@ -6,7 +6,8 @@ OBJ_DIR := obj
 LIBFT := -L. lib/libft.a
 HEADERS := -I ./inc
 INC := inc
-SOURCES := 	$(SRC_DIR)/main.c $(SRC_DIR)/scanner.c $(SRC_DIR)/utils.c
+SOURCES := 	$(SRC_DIR)/main.c $(SRC_DIR)/scanner.c $(SRC_DIR)/utils.c $(SRC_DIR)/color_utils.c  \
+			$(SRC_DIR)/scanner_utils.c $(SRC_DIR)/scanner_utils2.c
 MLX42 = lib/libmlx42.a  -Iinclude -ldl -lglfw -pthread -lm
 
 

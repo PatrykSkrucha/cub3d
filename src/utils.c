@@ -47,9 +47,16 @@ t_main	*init_main(void)
 	t_main	*main;
 
 	main = ptr_check(ft_calloc(1, sizeof(t_main)));
-	main->window = ptr_check(mlx_init(WIDTH, HEIGHT, "cub3d", true));
-	main->image = ptr_check(mlx_new_image(main->window, WIDTH, HEIGHT));
+	// main->window = ptr_check(mlx_init(WIDTH, HEIGHT, "cub3d", true));
+	// main->image = ptr_check(mlx_new_image(main->window, WIDTH, HEIGHT));
 	// main->floor = ft_calloc(1, sizeof(t_rgb));
 	// main->ceiling = ft_calloc(1, sizeof(t_rgb));
 	return (main);
+}
+
+int	ft_isspace(int c)
+{
+	if ((c >= 9 && c <= 13) || c == ' ')
+		return (1);
+	return (0);
 }

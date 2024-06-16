@@ -17,7 +17,7 @@
 typedef enum e_token
 {
 	EMPTY_LINE,
-	MATRIX,
+	MAP,
 	INFO,
 	ERROR,
 } t_token;
@@ -64,7 +64,7 @@ typedef struct s_point
 typedef struct s_player
 {
 	t_point		*position;
-	t_direction	direction;
+	char		direction;
 } t_player;
 
 typedef struct s_wall
@@ -77,12 +77,15 @@ typedef struct s_main
 	mlx_t		*window;
 	mlx_image_t	*image;
 	char		**map;
+	int			height;
+	int			width;
 	t_wall		*NO;
 	t_wall		*SO;
 	t_wall		*WE;
 	t_wall		*EA;
 	t_rgb		*floor;
 	t_rgb		*ceiling;
+	t_player	*player;
 	int			fd;
 } t_main;
 
@@ -92,5 +95,17 @@ void	double_free(char **str);
 void	*ptr_check(void *ptr);
 int		double_strlen(char **arr);
 t_main	*init_main(void);
+int		not_number(char *color);
+int		invalid_color(char *color);
+int		comma_check(char *color);
+char	**get_rgb(char **args);
+void	do_floor(t_main *main, char **args);
+void	do_no_wall(t_main *main, char **args);
+void	do_so_wall(t_main *main, char **args);
+void	do_we_wall(t_main *main, char **args);
+void	do_ea_wall(t_main *main, char **args);
+int		ft_isspace(int c);
+void	print_token(t_token token);
+void	print_action(t_action action);
 
 #endif
