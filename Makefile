@@ -10,10 +10,10 @@ SOURCES := 	$(SRC_DIR)/main.c $(SRC_DIR)/scanner.c $(SRC_DIR)/utils.c $(SRC_DIR)
 			$(SRC_DIR)/scanner_utils.c $(SRC_DIR)/scanner_utils2.c $(SRC_DIR)/utils2.c \
 			$(SRC_DIR)/utils3.c $(SRC_DIR)/token_utils.c $(SRC_DIR)/map_utils.c \
 			$(SRC_DIR)/utils4.c
-MLX42 = lib/libmlx42.a  -Iinclude -ldl -lglfw -pthread -lm
+MLX42 = lib/libmlx42.a  -Iinclude -ldl -lglfw -pthread -lm #we still have to include $(MLX42) to compilation
 
 
-OBJECTS := $(addprefix $(OBJ_DIR)/, $(notdir $(SRC:.c=.o)))
+OBJECTS := $(addprefix $(OBJ_DIR)/, $(notdir $(SOURCES:.c=.o)))
 CC := cc
 CFLAGS := -I $(INC) -Wall -Wextra -Werror -g
 
@@ -35,7 +35,7 @@ $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	@$(CC) $(CFLAGS) $(HEADERS) $< -o $@
+	@$(CC) $(CFLAGS) $(HEADERS) -c $< -o $@
 	@printf "$(YELLOW) $(BOLD)Compiling... $(RESET) $(notdir $<)\n"
 
 clean:
