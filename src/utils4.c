@@ -19,7 +19,6 @@ void	fill_map(t_main *main, char *line)
 	static int	i = -1;
 	char		*line_no_nl;
 
-
 	line_no_nl = remove_nl(line);
 	line_no_nl = remove_sufix_whitespace(line_no_nl);
 	if (line_no_nl)
@@ -78,4 +77,14 @@ void	do_ceiling(t_main *main, char **args)
 	main->ceiling->g = ft_atoi(rgb[1]);
 	main->ceiling->b = ft_atoi(rgb[2]);
 	double_free(rgb);
+}
+
+void	check_size(char *str)
+{
+	if (ft_strlen(str) < 4)
+		error_exit("Map must have extension .cub");
+	while (ft_strlen(str) > 4)
+		str++;
+	if (ft_strncmp(str, ".cub", 3))
+		error_exit("Map must have extension .cub");
 }

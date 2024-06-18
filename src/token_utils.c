@@ -1,6 +1,6 @@
 #include "../inc/cub3d.h"
 
-static int check_line_info(char *line)
+static int	check_line_info(char *line)
 {
 	char	**arr;
 

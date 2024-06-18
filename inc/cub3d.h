@@ -122,5 +122,6 @@ int			strlen_no_ws_end(char *str);
 void		fill_map(t_main *main, char *line);
 void		check_player(t_main *main);
 void		do_ceiling(t_main *main, char **args);
+void		check_size(char *str);
 
 #endif

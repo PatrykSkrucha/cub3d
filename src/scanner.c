@@ -11,14 +11,13 @@ void	alloc_matrix(char *path, t_main *main)
 	i = 0;
 	matrix_check = false;
 	main->fd = open_fd(path);
-	prev_token = MAP;
 	while (1)
 	{
 		line = get_next_line(main->fd);
 		if (!line)
 			break ;
 		token = check_token(line);
-		if (prev_token == EMPTY_LINE && token == MAP && matrix_check)
+		if (matrix_check && prev_token == EMPTY_LINE && token == MAP)
 			error_exit("Error while parsing the map. Empty line alloc matrix");
 		if (token == MAP)
 		{
@@ -31,7 +30,7 @@ void	alloc_matrix(char *path, t_main *main)
 		prev_token = token;
 	}
 	close(main->fd);
-	main->map = ptr_check(ft_calloc(i + 1, sizeof(char*)));
+	main->map = ptr_check(ft_calloc(i + 1, sizeof(char *)));
 	main->height = i;
 }
 
@@ -77,7 +76,7 @@ void	do_params(t_main *main, char *line)
 	double_free(args);
 }
 
-void scan_map(char **argv, t_main	*main)
+void	scan_map(char **argv, t_main	*main)
 {
 	char		*line;
 	t_action	action;

@@ -8,12 +8,7 @@ int	not_number(char *color)
 	while (color[i])
 	{
 		if (!ft_isdigit(color[i]))
-		{
-
-			printf("not number? >%c<\n", color[i]);
-
 			return (1);
-		}
 		i++;
 	}
 	return (0);
@@ -53,11 +48,12 @@ char	**get_rgb(char **args)
 	if (comma_check(args[1]))
 		error_exit("Error while parsing the map COMMA");
 	rgb = ptr_check(ft_split(args[1], ','));
-	if (double_strlen(rgb) != 3)  //here only R, G, B
+	if (double_strlen(rgb) != 3)
 		error_exit("Error while parsing the map rgb");
 	while (rgb[i])
 	{
-		if (ft_strlen(rgb[i]) > 3 || not_number(rgb[i]) || invalid_color(rgb[i]))
+		if (ft_strlen(rgb[i]) > 3 || not_number(rgb[i])
+			|| invalid_color(rgb[i]))
 			error_exit("Error while parsing the map rgb");
 		i++;
 	}
