@@ -1,104 +1,85 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   scanner.c                                          :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: ncornacc <ncornacc@student.codam.nl>         +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/06/22 09:36:19 by ncornacc      #+#    #+#                 */
+/*   Updated: 2024/06/22 09:53:19 by ncornacc      ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/cub3d.h"
 
-void	alloc_matrix(char *path, t_main *main)
+bool    find_map_width(t_map *map)
 {
-	t_token	token;
-	t_token	prev_token;
-	char	*line;
-	int		i;
-	bool	matrix_check;
+    int i;
+    int width;
+    int max_width;
 
-	i = 0;
-	matrix_check = false;
-	main->fd = open_fd(path);
-	while (1)
-	{
-		line = get_next_line(main->fd);
-		if (!line)
-			break ;
-		token = check_token(line);
-		if (matrix_check && prev_token == EMPTY_LINE && token == MAP)
-			error_exit("Error while parsing the map. Empty line alloc matrix");
-		if (token == MAP)
-		{
-			if (main->width < strlen_no_ws_end(line))
-				main->width = strlen_no_ws_end(line);
-			matrix_check = true;
-			i++;
-		}
-		free(line);
-		prev_token = token;
-	}
-	close(main->fd);
-	main->map = ptr_check(ft_calloc(i + 1, sizeof(char *)));
-	main->height = i;
+    max_width = 0;
+    i = find_map_start(map->map);
+    while(map->map[i] && check_map_str(map->map[i]))
+    {
+        width = ft_strlen(map->map[i]) - 1;
+        if (width > max_width)
+            max_width = width;
+        i++;
+    }
+    map->width = max_width;
+    return (true);
 }
 
-t_params	what_params(char *line)
+bool    find_map_height(t_map *map)
 {
-	if (!ft_strncmp(line, "C", ft_strlen(line)))
-		return (CEILING);
-	if (!ft_strncmp(line, "F", ft_strlen(line)))
-		return (FLOOR);
-	if (!ft_strncmp(line, "NO", ft_strlen(line)))
-		return (NO);
-	if (!ft_strncmp(line, "SO", ft_strlen(line)))
-		return (SO);
-	if (!ft_strncmp(line, "WE", ft_strlen(line)))
-		return (WE);
-	if (!ft_strncmp(line, "EA", ft_strlen(line)))
-		return (EA);
-	return (-1);
+    int i;
+    int height;
+
+    i = find_map_start(map->map);
+    height = 0;
+    while (map->map[i] && map->map[i][0] != '\n')
+    {
+        if (!check_map_str(map->map[i]))
+            return (false);
+        i++;
+        height++;
+    }
+    map->height = height;
+    return (true);
 }
 
-void	do_params(t_main *main, char *line)
+bool    check_map_char(char c)
 {
-	char		**args;
-	t_params	params;
-	char		*line_no_nl;
-
-	line_no_nl = remove_nl(line);
-	args = ptr_check(ft_split(line_no_nl, ' '));
-	params = what_params(args[0]);
-	if (params == CEILING)
-		do_ceiling(main, args);
-	else if (params == FLOOR)
-		do_floor(main, args);
-	else if (params == NO)
-		do_no_wall(main, args);
-	else if (params == SO)
-		do_so_wall(main, args);
-	else if (params == WE)
-		do_we_wall(main, args);
-	else if (params == EA)
-		do_ea_wall(main, args);
-	free(line_no_nl);
-	double_free(args);
+   return (c == '1' || c == ' ' || c == '0' || c == 'N' || c == 'W' || c == 'S' || c == 'E');
 }
 
-void	scan_map(char **argv, t_main	*main)
+bool   check_map_str(char *str)
 {
-	char		*line;
-	t_action	action;
+    int i;
 
-	alloc_matrix(argv[0], main);
-	main->fd = open_fd(argv[0]);
-	while (1)
-	{
-		line = get_next_line(main->fd);
-		if (!line)
-			break ;
-		action = look_for_action(line, main);
-		if (action == EXIT)
-			error_exit("Error while parsing the map action exit");
-		else if (action == PARAMS)
-			do_params(main, line);
-		else if (action == DO_MAP)
-			fill_map(main, line);
-		free(line);
-	}
-	fill_map(main, NULL);
-	check_borders(main->map, main->height);
-	check_player(main);
-	close(main->fd);
+    i = 0;
+    if (str[i] == '\n')
+        return (false);
+    while (str[i] && str[i] != '\n')
+    {
+        if (!check_map_char(str[i]))
+            return (false);
+        i++;
+    }
+    return (true);
+} 
+
+int		find_map_start(char **map)
+{
+    int i;
+
+    i = 0;
+    while (map[i])
+    {
+        if (check_map_str(map[i]))
+            break;
+        i++;
+    }
+    return (i);
 }

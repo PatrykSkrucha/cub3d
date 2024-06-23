@@ -1,21 +1,40 @@
-SHELL :=  /bin/bash
+NAME		:=	cub3d
 
-NAME := cub3d
-SRC_DIR := src
-OBJ_DIR := obj
-LIBFT := -L. lib/libft.a
-HEADERS := -I ./inc
-INC := inc
-SOURCES := 	$(SRC_DIR)/main.c $(SRC_DIR)/scanner.c $(SRC_DIR)/utils.c $(SRC_DIR)/color_utils.c  \
-			$(SRC_DIR)/scanner_utils.c $(SRC_DIR)/scanner_utils2.c $(SRC_DIR)/utils2.c \
-			$(SRC_DIR)/utils3.c $(SRC_DIR)/token_utils.c $(SRC_DIR)/map_utils.c \
-			$(SRC_DIR)/utils4.c
-MLX42 = lib/libmlx42.a  -Iinclude -ldl -lglfw -pthread -lm #we still have to include $(MLX42) to compilation
+LIBS		:=	./lib/libft.a
+MLX			?=	./MLX42
+MLXLIB		:= $(MLX)/build/libmlx42.a
+HEADER		:=	-Ilibft -Iinc -I$(MLX)/include/MLX42
 
+HEADERS		:=	inc/libft.h inc/cub3d.h include/struct.h $(MLX)/include/MLX42/MLX42.h
+OBJ_DIR		:=	obj
+SRC_DIR 	:=	src
 
-OBJECTS := $(addprefix $(OBJ_DIR)/, $(notdir $(SOURCES:.c=.o)))
 CC := cc
-CFLAGS := -I $(INC) -Wall -Wextra -Werror -g
+CFLAGS := -Wall -Wextra -Werror
+
+SOURCES := 	vector.c render.c \
+			main.c scanner.c \
+			scanner_utils.c \
+			parser.c parser_utils.c \
+			matrix_utils.c \
+			init.c flood_fill.c\
+			draw.c game_loop_utils.c \
+			game_loop.c init.c \
+			matrix_utils.c \
+			render.c render_utils.c \
+			end.c
+
+OBJECTS := $(patsubst %.c, $(OBJ_DIR)/%.o, $(SOURCES))
+SOURCES := $(addprefix $(SRC_DIR)/,$(SOURCES))
+
+
+ifeq ($(shell uname -s),Darwin)			# Mac
+	MLXLIB += -lglfw3 -framework Cocoa -framework OpenGL -framework IOKit
+else ifeq ($(shell uname -s),Linux)		# Linux
+	MLXLIB += -lglfw -ldl -pthread -lm
+endif
+
+
 
 
 GREEN = \x1b[32;01m
@@ -25,18 +44,20 @@ BOLD = \033[1m
 RESET = \x1b[0m
 RM = /bin/rm -f
 
-all: $(NAME)
+all: $(NAME) 
 
-$(NAME): $(OBJ_DIR) $(OBJECTS) $(SOURCES)
-	@$(CC) $(CFLAGS) $(SOURCES) $(LIBFT) -o $(NAME)
+$(NAME): $(OBJECTS) $(LIBS)
+	@$(CC) $^ $(LIBS) $(MLXLIB) $(CFLAGS) -o $(NAME)
 	@printf "$(GREEN) $(BOLD)======= Created program $(NAME) ======= $(RESET)\n"
 
-$(OBJ_DIR):
-	@mkdir -p $(OBJ_DIR)
-
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	@$(CC) $(CFLAGS) $(HEADERS) -c $< -o $@
+	@mkdir -p $(@D)
+	@$(CC) $(CFLAGS) $(HEADER) -c $< -o $@
 	@printf "$(YELLOW) $(BOLD)Compiling... $(RESET) $(notdir $<)\n"
+
+$(MLXLIB):
+	@cmake MLX42 -B MLX42/build
+	@make -C MLX42/build -j4
 
 clean:
 	@$(RM) -rf $(OBJ_DIR)
