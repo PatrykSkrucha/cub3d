@@ -6,7 +6,7 @@
 /*   By: ncornacc <ncornacc@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/22 11:03:59 by ncornacc      #+#    #+#                 */
-/*   Updated: 2024/06/22 13:52:52 by ncornacc      ########   odam.nl         */
+/*   Updated: 2024/07/01 01:27:44 by ncornacc      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ static  bool    init_image(t_main *main)
     main->image = mlx_new_image(main->window, WIDTH, HEIGHT);
     if (!main->image)
         return (false);
+    if (mlx_image_to_window(main->window, main->image, 0, 0) == -1)
+        return(false);
     return (true);
 }
 
@@ -28,19 +30,19 @@ void    player_orientation(t_main *main)
         main->player.direction.y = -1;
 
     }
-       if (main->map.grid[main->map.player_y][main->map.player_x] == PLAYER_E)
+    else if (main->map.grid[main->map.player_y][main->map.player_x] == PLAYER_E)
     {
         main->player.direction.x = 1;
         main->player.direction.y = 0;
 
     }
-       if (main->map.grid[main->map.player_y][main->map.player_x] == PLAYER_S)
+    else if (main->map.grid[main->map.player_y][main->map.player_x] == PLAYER_S)
     {
         main->player.direction.x = 0;
         main->player.direction.y = 1;
 
     }
-       if (main->map.grid[main->map.player_y][main->map.player_x] == PLAYER_W)
+    else if (main->map.grid[main->map.player_y][main->map.player_x] == PLAYER_W)
     {
         main->player.direction.x = -1;
         main->player.direction.y = 0;
@@ -97,6 +99,7 @@ void	init_step_and_side_dist(t_ray *r, t_vect position, t_vect direction)
 		r->side_dist_y = (r->map_y + 1.0 - position.y) * r->delta_dist_y;
 	}
 }
+
 
 void	init_ray(t_ray *ray, t_vect position, t_vect direction)
 {

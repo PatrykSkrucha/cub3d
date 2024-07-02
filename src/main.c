@@ -6,7 +6,7 @@
 /*   By: ncornacc <ncornacc@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/22 07:36:57 by ncornacc      #+#    #+#                 */
-/*   Updated: 2024/06/22 14:08:35 by ncornacc      ########   odam.nl         */
+/*   Updated: 2024/07/01 01:39:29 by ncornacc      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	main(int argc, char **argv)
 	if (!init_game(&main))
 		return (error_msg("Error while initializing the game\n", 
 				&main), 1);
-	if (game_loop(&main))
+	if (!game_loop(&main))
 		return (error_msg("Error while running the game\n", 
 				&main), 1);
 	end_program(&main);

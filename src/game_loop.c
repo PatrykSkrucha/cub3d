@@ -6,7 +6,7 @@
 /*   By: ncornacc <ncornacc@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/22 11:43:41 by ncornacc      #+#    #+#                 */
-/*   Updated: 2024/06/22 14:00:30 by ncornacc      ########   odam.nl         */
+/*   Updated: 2024/06/27 13:53:23 by ncornacc      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void    tick(void *param)
 bool    game_loop(t_main *main)
 {
     if (!mlx_loop_hook(main->window, tick, (void *)main))
-        return (error_msg("MLX loop hook has failed\n", main), free);
+        return (error_msg("MLX loop hook has failed\n", main), false);
     mlx_cursor_hook(main->window, mouse_update, (void *)main);
     mlx_key_hook(main->window, key_hook, (void *)main);
     mlx_loop(main->window);

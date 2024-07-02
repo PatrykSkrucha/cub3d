@@ -1,13 +1,13 @@
 F 76,76,76
 C 99,99,99
 
-NO ../1644.png
-SO ../2264.png
-WE ../6673827.png
-EA ../make-4-pixel-art-tiles-for-your-videogame.png
+NO ./assets/wall.png
+SO ./assets/wall.png
+WE ./assets/wall.png
+EA ./assets/wall.png
 
 
-                         11111      
+                         111111      
                         1000001
          111             111101
          101                101
@@ -29,5 +29,3 @@ EA ../make-4-pixel-art-tiles-for-your-videogame.png
    101             10111111111111111111101
     1              10000000000000000000001
                     1111111111111111111111
-
-

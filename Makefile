@@ -46,7 +46,7 @@ RM = /bin/rm -f
 
 all: $(NAME) 
 
-$(NAME): $(OBJECTS) $(LIBS)
+$(NAME):  $(MLXLIB) $(OBJECTS) $(LIBS)
 	@$(CC) $^ $(LIBS) $(MLXLIB) $(CFLAGS) -o $(NAME)
 	@printf "$(GREEN) $(BOLD)======= Created program $(NAME) ======= $(RESET)\n"
 

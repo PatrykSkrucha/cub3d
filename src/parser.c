@@ -6,7 +6,7 @@
 /*   By: ncornacc <ncornacc@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/22 09:03:31 by ncornacc      #+#    #+#                 */
-/*   Updated: 2024/06/22 13:50:18 by ncornacc      ########   odam.nl         */
+/*   Updated: 2024/07/01 01:02:36 by ncornacc      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,9 @@ bool    parser(char *file, t_main *main)
     if (!parse_assets(&(main->map.assets), main->map.map))
         return (error_msg("Error while parsing the assets\n", main), false);
     if (!init_map(main))
-        return (error_msg("Error while setting-up the map\n", main), false);
+        return (false);
     if (!check_map(main))
-        return (error_msg("Error while checking the map\n", main), false);
+        return (false);
     return (true);
 }
 

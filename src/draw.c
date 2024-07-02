@@ -6,7 +6,7 @@
 /*   By: ncornacc <ncornacc@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/22 13:03:52 by ncornacc      #+#    #+#                 */
-/*   Updated: 2024/06/22 13:58:14 by ncornacc      ########   odam.nl         */
+/*   Updated: 2024/06/27 18:37:17 by ncornacc      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ int get_alpha(t_ray_data *r, t_main *main)
 	return ((int)(255 / color_gradient));
 }
 
+#include <stdio.h>
+
 void	draw_wall(uint32_t x, t_ray_data r, t_main *main, mlx_texture_t *text)
 {
 	t_draw      d;
@@ -70,8 +72,9 @@ void	draw_wall(uint32_t x, t_ray_data r, t_main *main, mlx_texture_t *text)
 	d.wall_x = get_wall_x(main, r);
 	d.text_x = (double)(text->width * d.wall_x);
 	y = d.draw_start;
-	while (y < d.draw_end && y < (int)main->image->height)
+	while (y > d.draw_end && y < (int)main->image->height)
 	{
+		
 		if (y >= 0)
 		{
 			d.text_y = get_texture_y(text->height, d.line_height, c);

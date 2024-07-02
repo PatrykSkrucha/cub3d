@@ -6,7 +6,7 @@
 /*   By: ncornacc <ncornacc@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/22 12:19:34 by ncornacc      #+#    #+#                 */
-/*   Updated: 2024/06/22 12:48:24 by ncornacc      ########   odam.nl         */
+/*   Updated: 2024/07/02 18:22:52 by ncornacc      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ void    ray_loop(t_ray *r, t_map map)
 {
     while (r->hit == 0)
 	{
+		printf("%f\n", r->perp_wall_dist);
 		if (r->side_dist_x < r->side_dist_y)
 		{
 			r->side_dist_x += r->delta_dist_x;
@@ -34,6 +35,7 @@ void    ray_loop(t_ray *r, t_map map)
 			return ;
 		if (map.grid[r->map_y][r->map_x] > FLOOR)
 			r->hit = 1;
+		
 	}
 }
 
@@ -92,3 +94,4 @@ mlx_texture_t	*get_texture(t_ray_data *r, t_textures *textures)
 		return (textures->ea);
 	return (NULL);
 }
+

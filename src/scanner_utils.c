@@ -6,7 +6,7 @@
 /*   By: ncornacc <ncornacc@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/22 09:54:29 by ncornacc      #+#    #+#                 */
-/*   Updated: 2024/06/22 13:48:29 by ncornacc      ########   odam.nl         */
+/*   Updated: 2024/07/02 18:33:06 by ncornacc      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ bool    allocate_tiles(t_map *map)
         return (false);
     while (i < map->height)
     {
-        map->grid[i] = ft_calloc(map->width +1, sizeof(t_tile));
+        map->grid[i] = ft_calloc(map->width + 1, sizeof(t_tile));
         if (map->grid[i] == NULL)
         {
             matrix_free((char **)map->grid);

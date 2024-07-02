@@ -6,7 +6,7 @@
 /*   By: ncornacc <ncornacc@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/22 12:10:49 by ncornacc      #+#    #+#                 */
-/*   Updated: 2024/06/22 13:30:38 by ncornacc      ########   odam.nl         */
+/*   Updated: 2024/06/27 18:53:55 by ncornacc      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ t_vect    get_direction(uint32_t x, t_main *main)
 	ray_direction.y = main->player.direction.y + (main->player.plane.y) * camera_x;
 	return (ray_direction);
 }
+
+
 
 void    draw_rays(t_main *main)
 {
