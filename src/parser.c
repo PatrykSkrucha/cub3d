@@ -5,93 +5,104 @@
 /*                                                     +:+                    */
 /*   By: ncornacc <ncornacc@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2024/06/22 09:03:31 by ncornacc      #+#    #+#                 */
-/*   Updated: 2024/07/01 01:02:36 by ncornacc      ########   odam.nl         */
+/*   Created: 2024/07/17 11:55:06 by ncornacc      #+#    #+#                 */
+/*   Updated: 2024/07/17 13:02:12 by ncornacc      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/cub3d.h"
+#include <cub3d.h>
 
-bool    parser(char *file, t_main *main)
+bool	parser(char *map_config, t_main *main)
 {
-    int fd;
+	int	file;
 
-    if (!map_ext_check(file))
-        return (error_msg("Invalid Map extension\n", main), false);
-    if (!open_file(file, &fd))
-        return (error_msg("Error while opening the file\n", main), false);
-    if (!read_file(fd, &main->map))
-        return (error_msg("Error while reading the file\n", main), false);
-    if (!check_order(main->map.map))
-        return (error_msg("Error whith the order of the file\n", main), false);
-    if (!parse_assets(&(main->map.assets), main->map.map))
-        return (error_msg("Error while parsing the assets\n", main), false);
-    if (!init_map(main))
-        return (false);
-    if (!check_map(main))
-        return (false);
-    return (true);
+	if (!extension_check(map_config))
+		return (error_msg("Invalid Map Extension]\n", main), false);
+	if (!open_file(map_config, &file))
+		return (error_msg("Cant Open Map\n", main), false);
+	if (!read_file(file, &main->map))
+		return (error_msg("Map Reading Allocation Failed\n", main), false);
+	if (!check_assets_order(main->map.str_map))
+		return (error_msg("Map is not the last asset!\n", main), false);
+	if (!parse_assets(&(main->map.assets), main->map.str_map))
+		return (error_msg("Parse Elements Allocation Failed\n", main), false);
+	if (!setup_map(main))
+		return (false);
+	if (!validate_map(main))
+		return (false);
+	return (true);
 }
 
-bool    map_ext_check(char *path)
+t_token	string_to_token(char *str)
 {
-    if (!path)
-        return (false);
-    if (ft_strlen(path) <= 4)
-        return (false);
-    if (ft_strncmp(path + ft_strlen(path) - 4, ".cub", 5))
-        return (false);
-    return (true);
+	if (!ft_strncmp(str, "NO", 3))
+		return (NORTH);
+	if (!ft_strncmp(str, "SO", 3))
+		return (SOUTH);
+	if (!ft_strncmp(str, "WE", 3))
+		return (WEST);
+	if (!ft_strncmp(str, "EA", 3))
+		return (EAST);
+	if (!ft_strncmp(str, "F", 2))
+		return (FLOOR_COLOR);
+	if (!ft_strncmp(str, "C", 2))
+		return (CEILING_COLOR);
+	return (UNKOWN);
 }
 
-bool    open_file(char *path, int *fd)
+t_func	select_token(t_token token)
 {
-    *fd = open(path, O_RDONLY);
-    if (*fd < 0)
-        return (false);
-    return (true);
+	const t_func	functions[7] = {
+	[WEST] = west_parse,
+	[EAST] = east_parse,
+	[NORTH] = north_parse,
+	[SOUTH] = south_parse,
+	[FLOOR_COLOR] = floor_parse,
+	[CEILING_COLOR] = ceiling_parse,
+	};
+
+	return (functions[token]);
 }
 
-bool   read_file(int file, t_map *map)
+bool	parse_assets(t_assets *assets, char **str_map)
 {
-    char    *line;
-    char    **map_line;
-    char    **tmp;
+	char			**arr;
+	size_t			index;
+	t_func			function;
+	t_token			asset;
 
-    line = get_next_line(file);
-    if (!line)
-        return (false);
-    map_line = matrix_add(NULL, line);
-    if(!map_line)
-        return (free(line), false);
-    while (line)
-    {
-        free(line);
-        line = get_next_line(file);
-        if (!line)
-            break;
-        tmp = map_line;
-        map_line = matrix_add(map_line, line);
-        matrix_free(tmp);
-        if (!map_line)
-            return (free(line), false);
-    }
-    map->map = map_line;
-    return (true);
+	index = 0;
+	while (str_map[index] != NULL)
+	{
+		arr = ft_split(str_map[index], ' ');
+		if (!arr)
+			return (false);
+		asset = string_to_token(arr[0]);
+		if (asset != UNKOWN)
+		{
+			function = select_token(asset);
+			if (!function(assets, arr[1]))
+				return (ft_2dfree(arr), false);
+		}
+		ft_2dfree(arr);
+		index++;
+	}
+	return (true);
 }
 
-bool    check_order(char **map_line)
+bool	check_assets_order(char **str_map)
 {
-    size_t  index;
+	size_t	i;
 
-    index = find_map_start(map_line);
-    while (map_line[index] && check_map_str(map_line[index]))
-        index++;
-    while (map_line[index])
-    {
-        if (map_line[index][0] != '\n')
-            return (false);
-        index++;
-    }
-    return (true);
+	i = map_start_index(str_map);
+	while (str_map[i] && valid_map_str(str_map[i]))
+		i++;
+	while (str_map[i])
+	{
+		if (str_map[i][0] != '\n')
+			return (false);
+		i++;
+	}
+	return (true);
 }
+

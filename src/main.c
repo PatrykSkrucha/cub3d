@@ -5,40 +5,36 @@
 /*                                                     +:+                    */
 /*   By: ncornacc <ncornacc@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2024/06/22 07:36:57 by ncornacc      #+#    #+#                 */
-/*   Updated: 2024/07/01 01:39:29 by ncornacc      ########   odam.nl         */
+/*   Created: 2024/07/17 11:56:34 by ncornacc      #+#    #+#                 */
+/*   Updated: 2024/07/17 12:15:34 by ncornacc      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/cub3d.h"
+#include <cub3d.h>
 #include <stdlib.h>
 
-void	error_msg(const char *message, t_main *main)
+void	error_msg(const char *str, t_main *main)
 {
 	(void)main;
 	write(2, "Error\n", 6);
-	write(2, message, ft_strlen(message));
-	end_program(main);
+	write(2, str, ft_strlen(str));
+	game_end(main);
 }
 
-int	main(int argc, char **argv)
+int	main(int argc, char *argv[])
 {
 	t_main	main;
 
-
 	ft_bzero(&main, sizeof(t_main));
 	if (argc != 2)
-		return(error_msg("Invalid number of arguments\n", 
-				&main), 1);
-	if(!parser(argv[1], &main))
-		return (error_msg("Error while parsing the map\n", 
-				&main), 1);
-	if (!init_game(&main))
-		return (error_msg("Error while initializing the game\n", 
-				&main), 1);
+		return (error_msg("Invalid amount of arguments [2]\n",
+				&main), EXIT_FAILURE);
+	if (!parser(argv[1], &main))
+		return (EXIT_FAILURE);
+	if (!game_init(&main))
+		return (false);
 	if (!game_loop(&main))
-		return (error_msg("Error while running the game\n", 
-				&main), 1);
-	end_program(&main);
-	return (0);
+		return (false);
+	game_end(&main);
+	return (EXIT_SUCCESS);
 }

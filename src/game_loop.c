@@ -5,16 +5,18 @@
 /*                                                     +:+                    */
 /*   By: ncornacc <ncornacc@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2024/06/22 11:43:41 by ncornacc      #+#    #+#                 */
-/*   Updated: 2024/06/27 13:53:23 by ncornacc      ########   odam.nl         */
+/*   Created: 2024/07/17 11:56:13 by ncornacc      #+#    #+#                 */
+/*   Updated: 2024/07/17 12:41:56 by ncornacc      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/cub3d.h"
+#include "MLX42.h"
+#include <cub3d.h>
+#include <stdint.h>
 
-bool    update_image_scale(t_main *main)
+bool	update_image_scale(t_main *main)
 {
-    if ((uint32_t)main->window->width != main->image->width
+	if ((uint32_t)main->window->width != main->image->width
 		|| (uint32_t)main->window->height != main->image->height)
 	{
 		mlx_delete_image(main->window, main->image);
@@ -26,25 +28,23 @@ bool    update_image_scale(t_main *main)
 	return (false);
 }
 
-void    tick(void *param)
+void	game_tick(void *param)
 {
-    t_main  *main;
+	t_main	*main;
 
-    main = (t_main *)param;
-    if (update_image_scale(main))
-        return ;
-    game_controls(main);
-    render_single_frame(main);
+	main = (t_main *)param;
+	if (update_image_scale(main))
+		return ;
+	game_controls(main);
+	render_single_frame(main);
 }
 
-bool    game_loop(t_main *main)
+bool	game_loop(t_main *main)
 {
-    if (!mlx_loop_hook(main->window, tick, (void *)main))
-        return (error_msg("MLX loop hook has failed\n", main), false);
-    mlx_cursor_hook(main->window, mouse_update, (void *)main);
-    mlx_key_hook(main->window, key_hook, (void *)main);
-    mlx_loop(main->window);
-    return (true);
+	if (!mlx_loop_hook(main->window, game_tick, (void *)main))
+		return (error_msg("Mlx Loop hook failed\n", main), false);
+	mlx_cursor_hook(main->window, update_mouse, (void *)main);
+	mlx_key_hook(main->window, toggle_hook, (void *)main);
+	mlx_loop(main->window);
+	return (true);
 }
-
-

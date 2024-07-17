@@ -5,74 +5,50 @@
 /*                                                     +:+                    */
 /*   By: ncornacc <ncornacc@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2024/06/22 12:10:49 by ncornacc      #+#    #+#                 */
-/*   Updated: 2024/06/27 18:53:55 by ncornacc      ########   odam.nl         */
+/*   Created: 2024/07/17 11:55:52 by ncornacc      #+#    #+#                 */
+/*   Updated: 2024/07/17 12:58:01 by ncornacc      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/cub3d.h"
+#include <cub3d.h>
 
-t_vect    get_direction(uint32_t x, t_main *main)
+t_vect	get_dir(uint32_t x, t_main *cub)
 {
-    double	camera_x;
-	t_vect	ray_direction;
+	double	camx;
+	t_vect	raydir;
 
-	camera_x = main->fov * ((float)x / main->image->width) - (main->fov / 2);
-	ray_direction.x = main->player.direction.x + (main->player.plane.x) * camera_x;
-	ray_direction.y = main->player.direction.y + (main->player.plane.y) * camera_x;
-	return (ray_direction);
+	camx = cub->fov * ((float)x / cub->image->width) - (cub->fov / 2);
+	raydir.x = cub->player.dir.x + (cub->player.c_plane.x) * camx;
+	raydir.y = cub->player.dir.y + (cub->player.c_plane.y) * camx;
+	return (raydir);
 }
 
-
-
-void    draw_rays(t_main *main)
+void	draw_with_raycasts(t_main *cub)
 {
-    uint32_t		x;
-	t_ray_data	    r;
-	t_vect			direction;
-	t_vect			position;
+	uint32_t		x;
+	t_raycast_info	r;
+	t_vect			dir;
+	t_vect			pos;
 
 	x = 0;
-	position = main->player.position;
-	while (x < main->image->width)
+	pos = cub->player.pos;
+	while (x < cub->image->width)
 	{
-		direction = get_direction(x, main);
-		r = cast_ray(position, direction, main->map);
-		draw_wall(x, r, main, get_texture(&r, &main->map.assets.textures));
+		dir = get_dir(x, cub);
+		r = cast_ray(pos, dir, cub->map);
+		draw_wall(x, r, cub, get_texture(&r, &cub->map.assets.texture));
 		x++;
 	}
-    
 }
 
-void    draw_F_C(t_main *main)
+void	clear_images(t_main *cub)
 {
-    int	x;
-	int	y;
-
-	y = 0;
-	while (y < (int)main->image->height)
-	{
-		x = 0;
-		while (x < (int)main->image->width)
-		{
-			if (y < (int)(main->image->height / 2 + main->player.turn_direction))
-				mlx_put_pixel(main->image, x, y, main->map.assets.color_ceiling);
-			else
-				mlx_put_pixel(main->image, x, y, main->map.assets.color_floor);
-			x++;
-		}
-		y++;
-	}
+	ft_bzero(cub->image->pixels, (cub->image->width * cub->image->height) * 4);
 }
 
-void    clear(t_main *main)
+void	render_single_frame(t_main *cub)
 {
-    ft_bzero(main->image->pixels, (main->image->width * main->image->height) * 4);
-}
-
-void    render_single_frame(t_main *main)
-{
-    clear(main);
-    draw_F_C(main);
-    draw_rays(main);
+	clear_images(cub);
+	draw_floor_and_ceiling(cub);
+	draw_with_raycasts(cub);
 }

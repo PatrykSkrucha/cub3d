@@ -5,93 +5,76 @@
 /*                                                     +:+                    */
 /*   By: ncornacc <ncornacc@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2024/06/22 12:19:34 by ncornacc      #+#    #+#                 */
-/*   Updated: 2024/07/02 18:22:52 by ncornacc      ########   odam.nl         */
+/*   Created: 2024/07/17 11:55:48 by ncornacc      #+#    #+#                 */
+/*   Updated: 2024/07/17 12:55:20 by ncornacc      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/cub3d.h"
+#include <cub3d.h>
+#include <math.h>
 
-void    ray_loop(t_ray *r, t_map map)
+void	draw_floor_and_ceiling(t_main *main)
 {
-    while (r->hit == 0)
+	int	x;
+	int	y;
+
+	y = 0;
+	while (y < (int)main->image->height)
 	{
-		printf("%f\n", r->perp_wall_dist);
-		if (r->side_dist_x < r->side_dist_y)
+		x = 0;
+		while (x < (int)main->image->width)
 		{
-			r->side_dist_x += r->delta_dist_x;
-			r->map_x += r->step_x;
-			r->side = 0;
+			if (y < (int)(main->image->height / 2 + main->player.head_pitch))
+				mlx_put_pixel(main->image, x, y, main->map.assets.col_ceiling);
+			else
+				mlx_put_pixel(main->image, x, y, main->map.assets.col_floor);
+			x++;
 		}
-		else
-		{
-			r->side_dist_y += r->delta_dist_y;
-			r->map_y += r->step_y;
-			r->side = 1;
-		}
-		if (r->map_x >= map.width
-			|| r->map_y >= map.height
-			|| r->map_x < 0 || r->map_y < 0)
-			return ;
-		if (map.grid[r->map_y][r->map_x] > FLOOR)
-			r->hit = 1;
-		
+		y++;
 	}
 }
 
-void	set_distance(t_ray *r)
+mlx_texture_t	*get_texture(t_raycast_info *r, t_texture *textures)
 {
-	if (r->side == 0 && r->hit == 1)
-		r->perp_wall_dist = (r->side_dist_x - r->delta_dist_x);
-	else if (r->hit == 1)
-		r->perp_wall_dist = (r->side_dist_y - r->delta_dist_y);
-	else
-		r->perp_wall_dist = 0;
-}
-
-void	set_hit_spot(t_ray *r, t_vect position, t_vect direction)
-{
-	if (r->hit == 0)
-	{
-		r->hit_spot = position;
-		r->hit_spot = position;
-	}
-	else
-	{
-		r->hit_spot.y = position.y + r->perp_wall_dist * direction.y;
-		r->hit_spot.x = position.x + r->perp_wall_dist * direction.x;
-	}
-}
-
-t_ray_data  cast_ray(t_vect position, t_vect direction, t_map map)
-{
-    t_ray       r;
-    t_ray_data  data;
-
-    init_ray(&r, position, direction);
-    ray_loop(&r, map);
-    set_distance(&r);
-    set_hit_spot(&r, position, direction);
-    r.ray_dir_x = direction.x;
-    r.ray_dir_y = direction.y;
-    data.ray_dir = direction;
-    data.start_pos = position;
-    data.perp_wall_dist = r.perp_wall_dist;
-    data.hit_spot = r.hit_spot;
-    data.side = r.side;
-    return(data);
-}
-
-mlx_texture_t	*get_texture(t_ray_data *r, t_textures *textures)
-{
-	if (r->side == 1 && r->ray_dir.y > 0)
-		return (textures->no);
-	if (r->side == 0 && r->ray_dir.x > 0)
-		return (textures->we);
-	if (r->side == 1 && r->ray_dir.y < 0)
-		return (textures->so);
-	if (r->side == 0 && r->ray_dir.x < 0)
-		return (textures->ea);
+	if (r->side == 1 && r->dir.y > 0)
+		return (textures->north_wall);
+	if (r->side == 0 && r->dir.x > 0)
+		return (textures->west_wall);
+	if (r->side == 1 && r->dir.y < 0)
+		return (textures->south_wall);
+	if (r->side == 0 && r->dir.x < 0)
+		return (textures->east_wall);
 	return (NULL);
 }
 
+bool	in_image(mlx_image_t *image, uint32_t x, uint32_t y)
+{
+	return (x > 0 && x < image->width && y > 0 && y < image->height);
+}
+
+void	draw_line(mlx_image_t *image, t_vect cur, t_vect end, unsigned int color)
+{
+	int		dx;
+	int		dy;
+
+	dx = (int)(end.x) - (int)(cur.x);
+	dy = (int)(end.y) - (int)(cur.y);
+	if (abs(dx) > abs(dy))
+	{
+		while ((int)cur.x != (int)(end.x) && in_image(image, cur.x, cur.y))
+		{
+			mlx_put_pixel(image, round(cur.x), round(cur.y), color);
+			cur.y += (float)dy / abs(dx);
+			cur.x += (float)dx / abs(dx);
+		}
+	}
+	else
+	{
+		while ((int)cur.y != (int)(end.y) && in_image(image, cur.x, cur.y))
+		{
+			mlx_put_pixel(image, round(cur.x), round(cur.y), color);
+			cur.y += (float)dy / abs(dy);
+			cur.x += (float)dx / abs(dy);
+		}
+	}
+}
