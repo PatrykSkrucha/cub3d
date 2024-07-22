@@ -22,6 +22,21 @@
 # define WINDOW_WIDTH 1800
 # define WINDOW_HEIGHT 900
 
+typedef enum e_token_pars
+{
+	EMPTY_LINE,
+	MAP,
+	INFO,
+	ERROR,
+}	t_token_pars;
+
+typedef enum e_action_pars
+{
+	DO_MAP,
+	PARAMS,
+	SKIP,
+	EXIT,
+}	t_action_pars;
 
 typedef enum e_tile
 {
@@ -61,6 +76,8 @@ typedef struct s_assets
 	char		*west_texture_path;
 	char		*east_texture_path;
 	t_texture	texture;
+	bool		floor;
+	bool		ceiling;
 	uint32_t	col_floor;
 	uint32_t	col_ceiling;
 }	t_assets;
@@ -75,6 +92,7 @@ typedef struct s_map
 {
 	char		**str_map;
 	t_tile		**grid;
+	bool		player;
 	int			px;
 	int			py;
 	int			height;
@@ -141,13 +159,14 @@ typedef struct s_main
 	double		prev_mousey;
 	double		prev_mousex;
 	int			mouse_controls;
+	int			fd;
 }	t_main;
 
 typedef bool	(*t_func) (t_assets *, char *);
 
 bool			parser(char *map_config, t_main *main);
-bool			open_file(char *map_path, int *fd);
-bool			read_file(int file, t_map *map);
+bool		    open_file(char *path, t_main *main);
+bool   			read_file(char *map_config, t_main *main);
 bool			setup_map(t_main *main);
 bool			validate_map(t_main *main);
 bool			check_assets_order(char **str_map);
@@ -208,4 +227,14 @@ void			set_hit_position(t_raycast *r, t_vect pos, t_vect raydir);
 
 t_vect			normalize_vec(t_vect vec);
 
+//parsing mess
+void			error_exit(char *message);
+void			double_free(char **str);
+void		*ptr_check(void *ptr);
+int			strlen_no_ws_end(char *str);
+t_action_pars	look_for_action(char *line, t_main *main);
+char		*remove_nl(char *line);
+void	do_params(t_main *main, char *line);
+void	alloc_matrix(t_main *main);
+t_token_pars	check_token(char *line);
 #endif
