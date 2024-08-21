@@ -1,11 +1,8 @@
 
-NO  img/a
-
-SO img/a
-
-WE img/a
-
-EA img/a
+NO ./assets/wall.png
+SO ./assets/wall.png
+WE ./assets/wall.png
+EA ./assets/wall.png
 
 F 98,105,109
 C 80,130,200

@@ -453,10 +453,24 @@ void	check_player(t_main *main)
 		error_exit("Player not found.");
 }
 
+int	open_fd(char *path)
+{
+	int	fd;
+
+	fd = open(path, O_RDONLY);
+	if (fd == -1)
+	{
+		close(fd);
+		error_exit("Can't access the map");
+	}
+	return (fd);
+}
+
 bool	parser(char *map_config, t_main *main)
 {
 	if (!extension_check(map_config))
 		return (error_msg("Invalid Map Extension]\n", main), false);
+	main->fd = open_fd(map_config);
 	alloc_matrix(main);
 	if (!read_file(map_config, main))
 		return (error_msg("Map Reading Allocation Failed\n", main), false);

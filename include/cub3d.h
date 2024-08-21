@@ -237,4 +237,5 @@ char		*remove_nl(char *line);
 void	do_params(t_main *main, char *line);
 void	alloc_matrix(t_main *main);
 t_token_pars	check_token(char *line);
+int	open_fd(char *path);
 #endif

@@ -136,9 +136,11 @@ void	alloc_matrix(t_main *main)
 
 	i = 0;
 	matrix_check = false;
+	
 	while (1)
 	{
 		line = get_next_line(main->fd);
+		printf("hello1\n");
 		if (!line)
 			break ;
 		token = check_token(line);

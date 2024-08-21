@@ -22,7 +22,8 @@ void	error_msg(const char *str, t_main *main)
 }
 void	preinit_main(t_main *main)
 {
-	ft_bzero(&main, sizeof(t_main));
+	main->map.width = 0;
+	main->map.height = 0;
 	main->map.assets.ceiling = false;
 	main->map.assets.floor = false;
 	main->map.player = false;
@@ -36,12 +37,14 @@ int	main(int argc, char *argv[])
 {
 	t_main	main;
 
+	ft_bzero(&main, sizeof(t_main));
 	preinit_main(&main);
 	if (argc != 2)
 		return (error_msg("Invalid amount of arguments [2]\n",
 				&main), EXIT_FAILURE);
 	if (!parser(argv[1], &main))
 		return (EXIT_FAILURE);
+	printf("hello\n");
 	if (!game_init(&main))
 		return (false);
 	if (!game_loop(&main))
