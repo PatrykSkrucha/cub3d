@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   setup_map.c                                        :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: ncornacc <ncornacc@student.codam.nl>         +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2024/07/17 11:55:14 by ncornacc      #+#    #+#                 */
-/*   Updated: 2024/07/17 13:03:45 by ncornacc      ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   setup_map.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/17 11:55:14 by ncornacc          #+#    #+#             */
+/*   Updated: 2024/08/21 19:18:37 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ void	set_tiles(t_map *map)
 
 	y = 0;
 	i = map_start_index(map->str_map);
-	while (map->str_map[i] && valid_map_str(map->str_map[i]))
+	while (map->str_map[i])
 	{
 		j = 0;
 		while (map->str_map[i][j])

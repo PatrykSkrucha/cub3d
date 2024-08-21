@@ -1,16 +1,52 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   parser.c                                           :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: ncornacc <ncornacc@student.codam.nl>         +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2024/07/17 11:55:06 by ncornacc      #+#    #+#                 */
-/*   Updated: 2024/07/17 13:02:12 by ncornacc      ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   parser.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/17 11:55:06 by ncornacc          #+#    #+#             */
+/*   Updated: 2024/08/21 19:18:07 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <cub3d.h>
+
+int		ft_2d_arrlen(char **str)
+{
+	int	i;
+
+	i = 0;
+	if (!str)
+		return (0);
+	while (str[i])
+		i++;
+	return (i);
+}
+
+void	ft_2dfree(char **str)
+{
+	int	i;
+
+	i = 0;
+	if (!str)
+		return ;
+	while (str[i])
+	{
+		free(str[i]);
+		i++;
+	}
+	free(str);
+}
+
+int		ft_isspace(int c)
+{
+	c = (unsigned char)c;
+	if (c == '\t' || c == '\n' || c == '\v' || c == '\f' || c == '\r'
+		|| c == ' ')
+		return (1);
+	return (0);
+}
 
 //char	*remove_nl(char *line)
 //{
@@ -475,11 +511,7 @@ bool	parser(char *map_config, t_main *main)
 	if (!read_file(map_config, main))
 		return (error_msg("Map Reading Allocation Failed\n", main), false);
 	check_borders(main->map.str_map, main->map.height);
-	//check_player(main);
-	//if (!check_assets_order(main->map.str_map))
-	//	return (error_msg("Map is not the last asset!\n", main), false);
-	//if (!parse_assets(&(main->map.assets), main->map.str_map))
-	//	return (error_msg("Parse Elements Allocation Failed\n", main), false);
+	check_player(main);
 	if (!setup_map(main))
 		return (false);
 	if (!validate_map(main))

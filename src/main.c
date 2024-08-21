@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   main.c                                             :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: ncornacc <ncornacc@student.codam.nl>         +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2024/07/17 11:56:34 by ncornacc      #+#    #+#                 */
-/*   Updated: 2024/07/17 12:15:34 by ncornacc      ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/17 11:56:34 by ncornacc          #+#    #+#             */
+/*   Updated: 2024/08/21 19:16:48 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	error_msg(const char *str, t_main *main)
 	write(2, str, ft_strlen(str));
 	game_end(main);
 }
+
 void	preinit_main(t_main *main)
 {
 	main->map.width = 0;
@@ -44,7 +45,6 @@ int	main(int argc, char *argv[])
 				&main), EXIT_FAILURE);
 	if (!parser(argv[1], &main))
 		return (EXIT_FAILURE);
-	printf("hello\n");
 	if (!game_init(&main))
 		return (false);
 	if (!game_loop(&main))

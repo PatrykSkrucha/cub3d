@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   cub3d.h                                            :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: ncornacc <ncornacc@student.codam.nl>         +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2024/07/17 11:44:34 by ncornacc      #+#    #+#                 */
-/*   Updated: 2024/07/17 13:02:31 by ncornacc      ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   cub3d.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/17 11:44:34 by ncornacc          #+#    #+#             */
+/*   Updated: 2024/08/21 19:06:20 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -238,4 +238,7 @@ void	do_params(t_main *main, char *line);
 void	alloc_matrix(t_main *main);
 t_token_pars	check_token(char *line);
 int	open_fd(char *path);
+int		ft_isspace(int c);
+void	ft_2dfree(char **str);
+int		ft_2d_arrlen(char **str);
 #endif

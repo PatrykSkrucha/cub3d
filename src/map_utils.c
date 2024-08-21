@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   map_utils.c                                        :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: ncornacc <ncornacc@student.codam.nl>         +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2024/07/17 11:54:58 by ncornacc      #+#    #+#                 */
-/*   Updated: 2024/07/17 13:01:56 by ncornacc      ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   map_utils.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/17 11:54:58 by ncornacc          #+#    #+#             */
+/*   Updated: 2024/08/21 19:16:33 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,6 @@ void	alloc_matrix(t_main *main)
 	while (1)
 	{
 		line = get_next_line(main->fd);
-		printf("hello1\n");
 		if (!line)
 			break ;
 		token = check_token(line);
@@ -274,8 +273,6 @@ bool	validate_map(t_main *main)
 	if (main->map.px == -1)
 		return (error_msg("No Player Location\n", main), false);
 	p_tile = main->map.grid[main->map.py][main->map.px];
-	if (!flood_fill_validate(&main->map, main->map.py, main->map.px))
-		return (error_msg("No Valid Path\n", main), false);
 	set_tiles(&main->map);
 	main->map.grid[main->map.py][main->map.px] = p_tile;
 	return (true);
