@@ -13,7 +13,7 @@ OBJ_DIR		:=	obj
 SRC_DIR 	:=	src
 
 ### UTILS #####################################################
-CFLAGS	:=	-Wall -Wextra -Werror
+CFLAGS	:=	-Wall -Wextra -Werror -g
 RM		:=	rm -rf
 
 SRC 	:=	main.c \
@@ -65,6 +65,9 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(@D)
 	@$(CC) $(CFLAGS) $(HEADER) -c $< -o $@
 	@printf "$(YELLOW) $(BOLD)Compiling... $(RESET) $(notdir $<)\n"
+
+$(LIBS):
+	make -C libft
 
 mlx:
 	@cmake MLX42 -B MLX42/build
