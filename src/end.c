@@ -10,8 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "MLX42.h"
-#include "libft.h"
 #include <cub3d.h>
 #include <stdbool.h>
 
