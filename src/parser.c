@@ -502,6 +502,16 @@ int	open_fd(char *path)
 	return (fd);
 }
 
+void printmap(char **str)
+{
+	int i = 0;
+	while (str[i])
+	{
+		printf("%s\n", str[i]);
+		i++;
+	}
+}
+
 bool	parser(char *map_config, t_main *main)
 {
 	if (!extension_check(map_config))
@@ -512,6 +522,7 @@ bool	parser(char *map_config, t_main *main)
 		return (error_msg("Map Reading Allocation Failed\n", main), false);
 	check_borders(main->map.str_map, main->map.height);
 	check_player(main);
+	//printmap(main->map.str_map);
 	if (!setup_map(main))
 		return (false);
 	if (!validate_map(main))

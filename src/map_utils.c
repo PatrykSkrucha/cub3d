@@ -109,11 +109,9 @@ t_token_pars	check_token(char *line)
 
 	str_trim = ft_strtrim(line, " ");
 	str = remove_nl(str_trim);
-	printf("before after: %s\n", str);
 	free(str_trim);
 	if (!str)
 		return (free(str), EMPTY_LINE);
-	printf("after after: %s\n", str);
 	if (check_line_info(str))
 		return (free(str), INFO);
 	if (check_for_matrix(str))
@@ -148,7 +146,6 @@ void	alloc_matrix(t_main *main)
 		line = get_next_line(main->fd);
 		if (!line)
 			break ;
-		//printf("%i\n", j);
 		token = check_token(line);
 		if (matrix_check && prev_token == EMPTY_LINE && token == MAP)
 			error_exit("Error while parsing the map. Empty line alloc matrix");

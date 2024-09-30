@@ -82,5 +82,7 @@ bool	determine_map_width(t_map *map)
 		i++;
 	}
 	map->width = max_width;
+	printf("width: %i\n", map->width);
+
 	return (true);
 }
