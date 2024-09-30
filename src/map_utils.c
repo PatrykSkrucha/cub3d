@@ -65,8 +65,11 @@ void	error_exit(char *message)
 static int	check_line_info(char *line)
 {
 	char	**arr;
+	char	*cpy_str;
 
-	arr = ft_split(line, ' ');
+	cpy_str = ptr_check(ft_strdup(line));
+	arr = ft_split(cpy_str, ' ');
+	free(cpy_str);
 	if (!ft_strncmp(arr[0], "C", ft_strlen(arr[0])))
 		return (double_free(arr), 1);
 	if (!ft_strncmp(arr[0], "F", ft_strlen(arr[0])))
@@ -94,7 +97,7 @@ char	*remove_nl(char *line)
 	i = ft_strlen(line);
 	if ((i == 1 && line[0] == '\n') || i == 0)
 		return (NULL);
-	str = ptr_check(ft_calloc(i - 1, sizeof(char)));
+	str = ptr_check(ft_calloc(i, sizeof(char)));
 	ft_strlcpy(str, line, i);
 	return (str);
 }
@@ -106,9 +109,11 @@ t_token_pars	check_token(char *line)
 
 	str_trim = ft_strtrim(line, " ");
 	str = remove_nl(str_trim);
+	printf("before after: %s\n", str);
 	free(str_trim);
 	if (!str)
 		return (free(str), EMPTY_LINE);
+	printf("after after: %s\n", str);
 	if (check_line_info(str))
 		return (free(str), INFO);
 	if (check_for_matrix(str))
@@ -135,6 +140,7 @@ void	alloc_matrix(t_main *main)
 	bool	matrix_check;
 
 	i = 0;
+	int j = 0;
 	matrix_check = false;
 	
 	while (1)
@@ -142,6 +148,7 @@ void	alloc_matrix(t_main *main)
 		line = get_next_line(main->fd);
 		if (!line)
 			break ;
+		//printf("%i\n", j);
 		token = check_token(line);
 		if (matrix_check && prev_token == EMPTY_LINE && token == MAP)
 			error_exit("Error while parsing the map. Empty line alloc matrix");
@@ -154,6 +161,7 @@ void	alloc_matrix(t_main *main)
 		}
 		free(line);
 		prev_token = token;
+		j++;
 	}
 	close(main->fd);
 	main->map.str_map = ptr_check(ft_calloc(i + 1, sizeof(char *)));
