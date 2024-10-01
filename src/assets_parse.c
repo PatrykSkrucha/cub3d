@@ -1,15 +1,14 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   assets_parse.c                                     :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: ncornacc <ncornacc@student.codam.nl>         +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2024/07/17 11:54:44 by ncornacc      #+#    #+#                 */
-/*   Updated: 2024/07/17 13:31:16 by ncornacc      ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   assets_parse.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/17 11:54:44 by ncornacc          #+#    #+#             */
+/*   Updated: 2024/10/01 20:23:13 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "cub3d.h"
 
@@ -74,7 +73,8 @@ bool	ceiling_parse(t_assets *asset, char *path)
 	matrix = ft_split(path, ',');
 	if (!matrix && ft_2d_arrlen(matrix) != 3)
 		return (ft_2dfree(matrix), false);
-	col = get_rgba(ft_atoi(matrix[0]), ft_atoi(matrix[1]), ft_atoi(matrix[2]), 255);
+	col = get_rgba(ft_atoi(matrix[0]), ft_atoi(matrix[1]), \
+			ft_atoi(matrix[2]), 255);
 	asset->col_ceiling = col;
 	ft_2dfree(matrix);
 	return (true);
@@ -88,7 +88,8 @@ bool	floor_parse(t_assets *asset, char *path)
 	matrix = ft_split(path, ',');
 	if (!matrix && ft_2d_arrlen(matrix) != 3)
 		return (ft_2dfree(matrix), false);
-	col = get_rgba(ft_atoi(matrix[0]), ft_atoi(matrix[1]), ft_atoi(matrix[2]), 255);
+	col = get_rgba(ft_atoi(matrix[0]), ft_atoi(matrix[1]), \
+			ft_atoi(matrix[2]), 255);
 	asset->col_floor = col;
 	ft_2dfree(matrix);
 	return (true);

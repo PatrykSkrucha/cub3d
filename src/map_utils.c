@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:54:58 by ncornacc          #+#    #+#             */
-/*   Updated: 2024/08/21 19:16:33 by pskrucha         ###   ########.fr       */
+/*   Updated: 2024/10/01 20:21:46 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,13 @@ bool	extension_check(char *map_path)
 	return (true);
 }
 
-bool    open_file(char *path, t_main *main)
+bool	open_file(char *path, t_main *main)
 {
-    main->fd = open(path, O_RDONLY);
-    if (main->fd < 0)
-        return (false);
-    return (true);
+	main->fd = open(path, O_RDONLY);
+
+	if (main->fd < 0)
+		return (false);
+	return (true);
 }
 
 static int	check_for_matrix(char *line)
@@ -129,18 +130,23 @@ char	*strjoin_free(char *to_free, char *str)
 	return (new_str);
 }
 
-void	alloc_matrix(t_main *main)
+bool	width_update(t_main *main, char *line)
+{
+	if (main->map.width < strlen_no_ws_end(line))
+		main->map.width = strlen_no_ws_end(line);
+	return (true);
+}
+
+int	calc_matrix(t_main *main)
 {
 	t_token_pars	token;
 	t_token_pars	prev_token;
-	char	*line;
-	int		i;
-	bool	matrix_check;
+	char			*line;
+	int				i;
+	bool			matrix_check;
 
 	i = 0;
-	int j = 0;
 	matrix_check = false;
-	
 	while (1)
 	{
 		line = get_next_line(main->fd);
@@ -151,18 +157,13 @@ void	alloc_matrix(t_main *main)
 			error_exit("Error while parsing the map. Empty line alloc matrix");
 		if (token == MAP)
 		{
-			if (main->map.width < strlen_no_ws_end(line))
-				main->map.width = strlen_no_ws_end(line);
-			matrix_check = true;
+			matrix_check = width_update(main, line);
 			i++;
 		}
 		free(line);
 		prev_token = token;
-		j++;
 	}
-	close(main->fd);
-	main->map.str_map = ptr_check(ft_calloc(i + 1, sizeof(char *)));
-	main->map.height = i;
+	return (i);
 }
 
 char	*add_extra_spaces(char *line, int len)
@@ -227,6 +228,7 @@ bool   read_file(char *map_config, t_main *main)
 	char			*line;
 	t_action_pars	action;
 
+	close(main->fd);
 	if (!open_file(map_config, main))
 		return (false);
 	while (1)

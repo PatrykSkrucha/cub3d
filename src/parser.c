@@ -6,13 +6,13 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:55:06 by ncornacc          #+#    #+#             */
-/*   Updated: 2024/08/21 19:18:07 by pskrucha         ###   ########.fr       */
+/*   Updated: 2024/10/01 20:15:22 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <cub3d.h>
 
-int		ft_2d_arrlen(char **str)
+int	ft_2d_arrlen(char **str)
 {
 	int	i;
 
@@ -39,7 +39,7 @@ void	ft_2dfree(char **str)
 	free(str);
 }
 
-int		ft_isspace(int c)
+int	ft_isspace(int c)
 {
 	c = (unsigned char)c;
 	if (c == '\t' || c == '\n' || c == '\v' || c == '\f' || c == '\r'
@@ -173,7 +173,7 @@ void	do_so_wall(t_main *main, char **args)
 		error_exit("Error while parsing the map no wall");
 	main->map.assets.texture.south_wall = mlx_load_png(args[1]);
 	if (!main->map.assets.texture.south_wall)
-		error_exit("Error MLX NO wall");
+		error_exit("Error MLX SO wall");
 }
 
 void	do_we_wall(t_main *main, char **args)
@@ -184,7 +184,7 @@ void	do_we_wall(t_main *main, char **args)
 		error_exit("Error while parsing the map no wall");
 	main->map.assets.texture.west_wall = mlx_load_png(args[1]);
 	if (!main->map.assets.texture.west_wall)
-		error_exit("Error MLX NO wall");
+		error_exit("Error MLX WE wall");
 }
 
 void	do_ea_wall(t_main *main, char **args)
@@ -195,13 +195,13 @@ void	do_ea_wall(t_main *main, char **args)
 		error_exit("Error while parsing the map no wall");
 	main->map.assets.texture.east_wall = mlx_load_png(args[1]);
 	if (!main->map.assets.texture.east_wall)
-		error_exit("Error MLX NO wall");
+		error_exit("Error MLX EA wall");
 }
 
 
 void	do_floor(t_main *main, char **args)
 {
-	char	**rgb;
+	char		**rgb;
 	uint32_t	col;
 
 	if (double_strlen(args) != 2)
@@ -504,7 +504,9 @@ int	open_fd(char *path)
 
 void printmap(char **str)
 {
-	int i = 0;
+	int	i;
+
+	i = 0;
 	while (str[i])
 	{
 		printf("%s\n", str[i]);
@@ -517,12 +519,13 @@ bool	parser(char *map_config, t_main *main)
 	if (!extension_check(map_config))
 		return (error_msg("Invalid Map Extension]\n", main), false);
 	main->fd = open_fd(map_config);
-	alloc_matrix(main);
+	main->map.height = calc_matrix(main);
+	main->map.str_map = ptr_check(ft_calloc(main->map.height + 1, \
+						sizeof(char *)));
 	if (!read_file(map_config, main))
 		return (error_msg("Map Reading Allocation Failed\n", main), false);
 	check_borders(main->map.str_map, main->map.height);
 	check_player(main);
-	//printmap(main->map.str_map);
 	if (!setup_map(main))
 		return (false);
 	if (!validate_map(main))

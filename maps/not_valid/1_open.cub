@@ -1,10 +1,10 @@
 F 76,76,76
 C 99,99,99
 
-NO img/a
-SO img/b
-WE img/a
-EA img/a
+NO assets/wall.png
+SO assets/wall.png
+WE assets/wall.png
+EA assets/wall.png
 
 
 1111111111111111111
@@ -16,4 +16,4 @@ EA img/a
 1001111111111001001
 1111000000000N01011
 1000000001000000001
-1111111111111011111
+1111111111111111111

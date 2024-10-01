@@ -1,10 +1,10 @@
 F 123,44,76
 C 111,90,99
 
-NO ./assets/wall.png
-SO ./assets/wall.png
-WE ./assets/wall.png
-EA ./assets/wall.png
+NO assets/wall.png
+SO assets/wall.png
+WE assets/wall.png
+EA assets/wall.png
 
 
                          111111      
