@@ -12,59 +12,6 @@
 
 #include <cub3d.h>
 
-int	ft_2d_arrlen(char **str)
-{
-	int	i;
-
-	i = 0;
-	if (!str)
-		return (0);
-	while (str[i])
-		i++;
-	return (i);
-}
-
-void	ft_2dfree(char **str)
-{
-	int	i;
-
-	i = 0;
-	if (!str)
-		return ;
-	while (str[i])
-	{
-		free(str[i]);
-		i++;
-	}
-	free(str);
-}
-
-int	ft_isspace(int c)
-{
-	c = (unsigned char)c;
-	if (c == '\t' || c == '\n' || c == '\v' || c == '\f' || c == '\r'
-		|| c == ' ')
-		return (1);
-	return (0);
-}
-
-//char	*remove_nl(char *line)
-//{
-//	char	*str;
-//	int		i;
-
-//	if (!line)
-//		return (NULL);
-//	if (!ft_strrchr(line, '\n'))
-//		return (ptr_check(ft_strdup(line)));
-//	i = ft_strlen(line);
-//	if ((i == 1 && line[0] == '\n') || i == 0)
-//		return (NULL);
-//	str = ptr_check(ft_calloc(i - 1, sizeof(char)));
-//	ft_strlcpy(str, line, i);
-//	return (str);
-//}
-
 t_token	what_params(char *line)
 {
 	if (!ft_strncmp(line, "C", ft_strlen(line)))
@@ -80,78 +27,6 @@ t_token	what_params(char *line)
 	if (!ft_strncmp(line, "EA", ft_strlen(line)))
 		return (EAST);
 	return (-1);
-}
-
-int	double_strlen(char **arr)
-{
-	int	i;
-
-	i = 0;
-	if (!arr)
-		return (0);
-	while (arr[i])
-		i++;
-	return (i);
-}
-
-int	not_number(char *color)
-{
-	int	i;
-
-	i = 0;
-	while (color[i])
-	{
-		if (!ft_isdigit(color[i]))
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-int	invalid_color(char *color)
-{
-	if (ft_atoi(color) > 255)
-		return (1);
-	return (0);
-}
-
-int	comma_check(char *color)
-{
-	int	i;
-	int	counter;
-
-	i = 0;
-	counter = 0;
-	while (color[i])
-	{
-		if (color[i] == ',')
-			counter++;
-		i++;
-	}
-	if (counter != 2)
-		return (1);
-	return (0);
-}
-
-char	**get_rgb(char **args)
-{
-	char	**rgb;
-	int		i;
-
-	i = 0;
-	if (comma_check(args[1]))
-		error_exit("Error while parsing the map COMMA");
-	rgb = ptr_check(ft_split(args[1], ','));
-	if (double_strlen(rgb) != 3)
-		error_exit("Error while parsing the map rgb");
-	while (rgb[i])
-	{
-		if (ft_strlen(rgb[i]) > 3 || not_number(rgb[i])
-			|| invalid_color(rgb[i]))
-			error_exit("Error while parsing the map rgb");
-		i++;
-	}
-	return (rgb);
 }
 
 void	do_no_wall(t_main *main, char **args)
@@ -514,18 +389,27 @@ void printmap(char **str)
 	}
 }
 
+void   error_exit(char *message)
+{
+       ft_putstr_fd("Error\n", 2);
+       ft_putstr_fd(message, 2);
+       ft_putstr_fd("\n", 2);
+       exit (1);
+}
+
 bool	parser(char *map_config, t_main *main)
 {
 	if (!extension_check(map_config))
-		return (error_msg("Invalid Map Extension]\n", main), false);
-	main->fd = open_fd(map_config);
+		return (error_msg("Invalid map extension\n", main), false);
+	if (!open_file(map_config, main))
+		return (error_msg("File not accessible.\n", main), false);
 	main->map.height = calc_matrix(main);
 	main->map.str_map = ptr_check(ft_calloc(main->map.height + 1, \
 						sizeof(char *)));
 	if (!read_file(map_config, main))
-		return (error_msg("Map Reading Allocation Failed\n", main), false);
+		return (error_msg("Map reading allocation failed\n", main), false);
 	check_borders(main->map.str_map, main->map.height);
-	check_player(main);
+	//check_player(main);
 	if (!setup_map(main))
 		return (false);
 	if (!validate_map(main))

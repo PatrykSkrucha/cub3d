@@ -241,4 +241,14 @@ int	open_fd(char *path);
 int		ft_isspace(int c);
 void	ft_2dfree(char **str);
 int		ft_2d_arrlen(char **str);
+char	*remove_nl(char *line);
+char	*strjoin_free(char *to_free, char *str);
+bool	width_update(t_main *main, char *line);
+bool	extension_check(char *map_path);
+bool	open_file(char *path, t_main *main);
+int		ft_2d_arrlen(char **str);
+void	ft_2dfree(char **str);
+int		ft_isspace(int c);
+int		double_strlen(char **arr);
+char	**get_rgb(char **args);
 #endif

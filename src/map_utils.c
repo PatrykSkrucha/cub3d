@@ -12,30 +12,8 @@
 
 #include <cub3d.h>
 #include <stdbool.h>
-#define EXTENSION_LENGTH 4
 
-bool	extension_check(char *map_path)
-{
-	if (!map_path)
-		return (false);
-	if (ft_strlen(map_path) <= EXTENSION_LENGTH)
-		return (false);
-	if (ft_strncmp(map_path + ft_strlen(map_path)
-			- EXTENSION_LENGTH, ".cub", 5))
-		return (false);
-	return (true);
-}
-
-bool	open_file(char *path, t_main *main)
-{
-	main->fd = open(path, O_RDONLY);
-
-	if (main->fd < 0)
-		return (false);
-	return (true);
-}
-
-static int	check_for_matrix(char *line)
+static int	check_valid_char(char *line)
 {
 	int		i;
 
@@ -53,14 +31,6 @@ static int	check_for_matrix(char *line)
 		i++;
 	}
 	return (1);
-}
-
-void	error_exit(char *message)
-{
-	ft_putstr_fd("Error\n", 2);
-	ft_putstr_fd(message, 2);
-	ft_putstr_fd("\n", 2);
-	exit (1);
 }
 
 static int	check_line_info(char *line)
@@ -83,24 +53,8 @@ static int	check_line_info(char *line)
 		return (double_free(arr), 1);
 	if (!ft_strncmp(arr[0], "EA", ft_strlen(arr[0])))
 		return (double_free(arr), 1);
+	double_free(arr);
 	return (0);
-}
-
-char	*remove_nl(char *line)
-{
-	char	*str;
-	int		i;
-
-	if (!line)
-		return (NULL);
-	if (!ft_strrchr(line, '\n'))
-		return (ptr_check(ft_strdup(line)));
-	i = ft_strlen(line);
-	if ((i == 1 && line[0] == '\n') || i == 0)
-		return (NULL);
-	str = ptr_check(ft_calloc(i, sizeof(char)));
-	ft_strlcpy(str, line, i);
-	return (str);
 }
 
 t_token_pars	check_token(char *line)
@@ -115,27 +69,12 @@ t_token_pars	check_token(char *line)
 		return (free(str), EMPTY_LINE);
 	if (check_line_info(str))
 		return (free(str), INFO);
-	if (check_for_matrix(str))
+	if (check_valid_char(str))
 		return (free(str), MAP);
 	return (free(str), ERROR);
 }
 
-char	*strjoin_free(char *to_free, char *str)
-{
-	char	*new_str;
-
-	new_str = ptr_check(ft_strjoin(to_free, str));
-	if (to_free)
-		free(to_free);
-	return (new_str);
-}
-
-bool	width_update(t_main *main, char *line)
-{
-	if (main->map.width < strlen_no_ws_end(line))
-		main->map.width = strlen_no_ws_end(line);
-	return (true);
-}
+//calc width and height of map and checks as well if no empty row occurs in the map
 
 int	calc_matrix(t_main *main)
 {
@@ -154,12 +93,11 @@ int	calc_matrix(t_main *main)
 			break ;
 		token = check_token(line);
 		if (matrix_check && prev_token == EMPTY_LINE && token == MAP)
-			error_exit("Error while parsing the map. Empty line alloc matrix");
+			return (error_msg("Error while parsing the map.\n", main), -1);
 		if (token == MAP)
-		{
 			matrix_check = width_update(main, line);
+		if (token == MAP)
 			i++;
-		}
 		free(line);
 		prev_token = token;
 	}
@@ -250,28 +188,28 @@ bool   read_file(char *map_config, t_main *main)
 	return (true);
 }
 
-bool	flood_fill_validate(t_map *map, int y, int x)
-{
-	bool	ret;
+//bool	flood_fill_validate(t_map *map, int y, int x)
+//{
+//	bool	ret;
 
-	ret = true;
-	if (x == 0 || y == 0 || x == map->width - 1
-		|| y == map->height - 1 || map->grid[y][x] == SPACE)
-		return (false);
-	map->grid[y][x] = TEMP;
-	if (x > 0 && map->grid[y][x - 1] != WALL && map->grid[y][x - 1] != TEMP)
-		ret = flood_fill_validate(map, y, x - 1);
-	if (ret && x < map->width && map->grid[y][x + 1] != WALL
-			&& map->grid[y][x + 1] != TEMP)
-		ret = flood_fill_validate(map, y, x + 1);
-	if (ret && y > 0 && map->grid[y - 1][x] != WALL
-			&& map->grid[y - 1][x] != TEMP)
-		ret = flood_fill_validate(map, y - 1, x);
-	if (ret && y < map->height && map->grid[y + 1][x] != WALL
-			&& map->grid[y + 1][x] != TEMP)
-		ret = flood_fill_validate(map, y + 1, x);
-	return (ret);
-}
+//	ret = true;
+//	if (x == 0 || y == 0 || x == map->width - 1
+//		|| y == map->height - 1 || map->grid[y][x] == SPACE)
+//		return (false);
+//	map->grid[y][x] = TEMP;
+//	if (x > 0 && map->grid[y][x - 1] != WALL && map->grid[y][x - 1] != TEMP)
+//		ret = flood_fill_validate(map, y, x - 1);
+//	if (ret && x < map->width && map->grid[y][x + 1] != WALL
+//			&& map->grid[y][x + 1] != TEMP)
+//		ret = flood_fill_validate(map, y, x + 1);
+//	if (ret && y > 0 && map->grid[y - 1][x] != WALL
+//			&& map->grid[y - 1][x] != TEMP)
+//		ret = flood_fill_validate(map, y - 1, x);
+//	if (ret && y < map->height && map->grid[y + 1][x] != WALL
+//			&& map->grid[y + 1][x] != TEMP)
+//		ret = flood_fill_validate(map, y + 1, x);
+//	return (ret);
+//}
 
 bool	validate_map(t_main *main)
 {

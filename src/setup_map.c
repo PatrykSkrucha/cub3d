@@ -104,10 +104,6 @@ bool	setup_map(t_main *main)
 {
 	main->map.px = -1;
 	main->map.py = -1;
-	//if (!determine_map_height(&main->map))
-	//	return (error_msg("Failed to determine map height\n", main), false);
-	//if (!determine_map_width(&main->map))
-		//return (error_msg("Failed to determine map width\n", main), false);
 	if (!allocate_map_tiles(&main->map))
 		return (error_msg("Map tile allocation failed\n", main), false);
 	set_tiles(&main->map);
