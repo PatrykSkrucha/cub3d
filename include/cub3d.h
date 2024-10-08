@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:44:34 by ncornacc          #+#    #+#             */
-/*   Updated: 2024/10/08 20:01:12 by pskrucha         ###   ########.fr       */
+/*   Updated: 2024/10/08 20:32:55 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,7 +197,8 @@ void			draw_line(mlx_image_t *img,
 void			set_distance(t_raycast *r);
 void			set_hit_position(t_raycast *r, t_vect pos, t_vect raydir);
 t_vect			normalize_vec(t_vect vec);
-void			error_exit(char *message);
+void			error_exit(char *message, t_main *main);
+
 void			double_free(char **str);
 void			*ptr_check(void *ptr);
 int				strlen_no_ws_end(char *str);
@@ -205,7 +206,7 @@ t_action_pars	look_for_action(char *line, t_main *main);
 char			*remove_nl(char *line);
 void			make_assets(t_main *main, char *line);
 int				calc_matrix(t_main *main);
-t_token_pars	check_token(char *line);
+// t_token_pars	check_token(char *line);
 int				ft_isspace(int c);
 void			ft_2dfree(char **str);
 int				ft_2d_arrlen(char **str);
@@ -218,8 +219,8 @@ int				ft_2d_arrlen(char **str);
 void			ft_2dfree(char **str);
 int				ft_isspace(int c);
 int				double_strlen(char **arr);
-char			**get_rgb(char **args);
-t_token_pars	check_token(char *line);
+char			**get_rgb(char **args, t_main *main);
+t_token_pars	check_token(char *line, t_main *main);
 t_token			which_asset(char *line);
 t_action_pars	look_for_action(char *line, t_main *main);
 void			do_no_wall(t_main *main, char **args);
@@ -229,7 +230,6 @@ void			do_ea_wall(t_main *main, char **args);
 bool			read_file(char *map_config, t_main *main);
 bool			validate_map(t_main *main);
 void			fill_map(t_main *main, char *line);
-void			error_exit(char *message);
 char			*strtrim_space_col(char	**str, int x, int height);
 char			*strtrim_space_row(char *s1);
 void			make_assets(t_main *main, char *line);

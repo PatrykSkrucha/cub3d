@@ -6,13 +6,13 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 15:46:22 by pskrucha          #+#    #+#             */
-/*   Updated: 2024/10/08 16:33:07 by pskrucha         ###   ########.fr       */
+/*   Updated: 2024/10/08 20:33:12 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <cub3d.h>
 
-static int	check_valid_char(char *line)
+static int	check_valid_char(char *line, t_main *main)
 {
 	int		i;
 
@@ -20,12 +20,12 @@ static int	check_valid_char(char *line)
 	while (line[i])
 	{
 		if (ft_isspace(line[i]) && line[i] != ' ')
-			error_exit("Space is only acceptable whitespace in map.");
+			error_exit("Space is only acceptable whitespace in map.", main);
 		if (!ft_strchr(" 01NSEA", line[i]))
 		{
 			printf("line: %s\n", line);
 			printf("char: >%c<\n", line[i]);
-			error_exit("Error while parsing the map wrong char map.");
+			error_exit("Error while parsing the map wrong char map.", main);
 		}
 		i++;
 	}
@@ -56,7 +56,7 @@ static int	check_line_info(char *line)
 	return (0);
 }
 
-t_token_pars	check_token(char *line)
+t_token_pars	check_token(char *line, t_main *main)
 {
 	char	*str;
 	char	*str_trim;
@@ -68,7 +68,7 @@ t_token_pars	check_token(char *line)
 		return (free(str), EMPTY_LINE);
 	if (check_line_info(str))
 		return (free(str), INFO);
-	if (check_valid_char(str))
+	if (check_valid_char(str, main))
 		return (free(str), MAP);
 	return (free(str), ERROR);
 }
@@ -88,7 +88,7 @@ bool	read_file(char *map_config, t_main *main)
 			break ;
 		action = look_for_action(line, main);
 		if (action == EXIT)
-			error_exit("Error while parsing the map action exit");
+			error_exit("Error while parsing the map action exit", main);
 		else if (action == PARAMS)
 			make_assets(main, line);
 		else if (action == DO_MAP)

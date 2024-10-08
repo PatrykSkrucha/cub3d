@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:55:14 by ncornacc          #+#    #+#             */
-/*   Updated: 2024/08/21 19:18:37 by pskrucha         ###   ########.fr       */
+/*   Updated: 2024/10/08 20:20:00 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,6 @@ bool	setup_map(t_main *main)
 		return (error_msg("Map tile allocation failed\n", main), false);
 	set_tiles(&main->map);
 	if (!get_player_pos(&main->map))
-		return (error_msg("mulitple player positions\n", main), false);
+		return (error_msg("Mulitple player positions\n", main), false);
 	return (true);
 }

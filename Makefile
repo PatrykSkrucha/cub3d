@@ -13,7 +13,7 @@ OBJ_DIR		:=	obj
 SRC_DIR 	:=	src
 
 ### UTILS #####################################################
-CFLAGS	:=	-Wall -Wextra -Werror -g -fsanitize=address
+CFLAGS	:=	-Wall -Wextra -Werror -g #-fsanitize=address
 RM		:=	rm -rf
 
 SRC 	:=	main.c \

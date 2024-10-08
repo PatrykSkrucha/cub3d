@@ -1,10 +1,10 @@
-NO  img/ael-bekk.xpm
+NO  assets/wall.png
 
-SO img/mel-hada.xpm
+SO assets/wall.png
 
-WE img/mabenchi.xpm
+WE assets/wall.png
 
-EA img/zboudair.xpm
+EA assets/wall.png
 
 F 98,105,109
 C 80,130,200

@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 18:56:31 by pskrucha          #+#    #+#             */
-/*   Updated: 2024/10/08 20:00:28 by pskrucha         ###   ########.fr       */
+/*   Updated: 2024/10/08 20:34:29 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	strlen_no_ws_end(char *str)
 void	*ptr_check(void *ptr)
 {
 	if (!ptr)
-		error_exit("Malloc failure.");
+		error_exit("Malloc failure.", NULL);
 	return (ptr);
 }
 

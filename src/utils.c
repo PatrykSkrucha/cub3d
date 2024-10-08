@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:56:18 by ncornacc          #+#    #+#             */
-/*   Updated: 2024/10/08 16:36:14 by pskrucha         ###   ########.fr       */
+/*   Updated: 2024/10/08 20:25:37 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,10 +72,11 @@ t_vect	normalize_vec(t_vect vec)
 	return (vec);
 }
 
-void	error_exit(char *message)
+void	error_exit(char *message, t_main *main)
 {
 	ft_putstr_fd("Error\n", 2);
 	ft_putstr_fd(message, 2);
 	ft_putstr_fd("\n", 2);
+	game_end(main);
 	exit (1);
 }

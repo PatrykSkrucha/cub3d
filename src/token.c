@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 15:53:58 by pskrucha          #+#    #+#             */
-/*   Updated: 2024/10/08 16:34:54 by pskrucha         ###   ########.fr       */
+/*   Updated: 2024/10/08 20:34:41 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ t_action_pars	look_for_action(char *line, t_main *main)
 	t_token_pars	token;
 	t_action_pars	expected_move;
 
-	token = check_token(line);
+	token = check_token(line, main);
 	expected_move = check_next_step(main);
 	if (token == EMPTY_LINE && expected_move == PARAMS)
 		return (SKIP);

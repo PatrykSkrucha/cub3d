@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 18:52:52 by pskrucha          #+#    #+#             */
-/*   Updated: 2024/10/08 18:58:30 by pskrucha         ###   ########.fr       */
+/*   Updated: 2024/10/08 20:34:18 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,10 @@ static void	do_floor(t_main *main, char **args)
 	uint32_t	col;
 
 	if (double_strlen(args) != 2)
-		error_exit("Error while parsing the map floor");
+		error_exit("Error while parsing the map floor", main);
 	if (main->map.assets.floor)
-		error_exit("Error while parsing the map floor");
-	rgb = get_rgb(args);
+		error_exit("Error while parsing the map floor", main);
+	rgb = get_rgb(args, main);
 	col = get_rgba(ft_atoi(rgb[0]), ft_atoi(rgb[1]), ft_atoi(rgb[2]), 255);
 	main->map.assets.col_floor = col;
 	main->map.assets.floor = true;
@@ -34,10 +34,10 @@ static void	do_ceiling(t_main *main, char **args)
 	uint32_t	col;
 
 	if (double_strlen(args) != 2)
-		error_exit("Error while parsing the map ceiling");
+		error_exit("Error while parsing the map ceiling", main);
 	if (main->map.assets.ceiling)
-		error_exit("Error while parsing the map ceiling");
-	rgb = get_rgb(args);
+		error_exit("Error while parsing the map ceiling", main);
+	rgb = get_rgb(args, main);
 	col = get_rgba(ft_atoi(rgb[0]), ft_atoi(rgb[1]), ft_atoi(rgb[2]), 255);
 	main->map.assets.col_ceiling = col;
 	main->map.assets.ceiling = true;

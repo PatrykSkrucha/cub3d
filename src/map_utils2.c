@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 15:43:49 by pskrucha          #+#    #+#             */
-/*   Updated: 2024/10/08 16:23:55 by pskrucha         ###   ########.fr       */
+/*   Updated: 2024/10/08 20:29:16 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,22 +51,22 @@ static int	comma_check(char *color)
 	return (0);
 }
 
-char	**get_rgb(char **args)
+char	**get_rgb(char **args, t_main *main)
 {
 	char	**rgb;
 	int		i;
 
 	i = 0;
 	if (comma_check(args[1]))
-		error_exit("Error while parsing the map RGB");
+		error_exit("Error while parsing the map RGB", main);
 	rgb = ptr_check(ft_split(args[1], ','));
 	if (double_strlen(rgb) != 3)
-		error_exit("Error while parsing the map rgb");
+		error_exit("Error while parsing the map rgb", main);
 	while (rgb[i])
 	{
 		if (ft_strlen(rgb[i]) > 3 || not_number(rgb[i])
 			|| invalid_color(rgb[i]))
-			error_exit("Error while parsing the map rgb");
+			error_exit("Error while parsing the map rgb", main);
 		i++;
 	}
 	return (rgb);
