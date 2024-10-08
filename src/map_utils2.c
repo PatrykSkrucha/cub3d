@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   map_utils1.c                                       :+:      :+:    :+:   */
+/*   map_utils2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 15:43:49 by pskrucha          #+#    #+#             */
-/*   Updated: 2024/10/08 15:43:54 by pskrucha         ###   ########.fr       */
+/*   Updated: 2024/10/08 16:23:55 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ char	**get_rgb(char **args)
 
 	i = 0;
 	if (comma_check(args[1]))
-		error_exit("Error while parsing the map COMMA");
+		error_exit("Error while parsing the map RGB");
 	rgb = ptr_check(ft_split(args[1], ','));
 	if (double_strlen(rgb) != 3)
 		error_exit("Error while parsing the map rgb");

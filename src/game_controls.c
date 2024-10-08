@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   game_controls.c                                    :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: ncornacc <ncornacc@student.codam.nl>         +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2024/07/17 11:56:01 by ncornacc      #+#    #+#                 */
-/*   Updated: 2024/07/17 12:46:06 by ncornacc      ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   game_controls.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/17 11:56:01 by ncornacc          #+#    #+#             */
+/*   Updated: 2024/10/08 16:14:46 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,8 @@ void	update_mouse(double xpos, double ypos, void *param)
 		main->player.head_pitch = -(int)(main->image->height / 2);
 	main->prev_mousey = main->image->height / 2;
 	main->prev_mousex = main->image->width / 2;
-	mlx_set_mouse_pos(main->window, main->image->width / 2, main->image->height / 2);
+	mlx_set_mouse_pos(main->window, main->image->width \
+		/ 2, main->image->height / 2);
 }
 
 static void	update_player_direction(t_main *main)
@@ -93,10 +94,13 @@ void	cub_movement_check(t_main *main)
 		move_vec.x = move_vec.x * r.perpwalldist;
 		move_vec.y = move_vec.y * r.perpwalldist;
 	}
-	else if (r.perpwalldist > main->window->delta_time * main->player.move_speed)
+	else if (r.perpwalldist > main->window->delta_time \
+		* main->player.move_speed)
 	{
-		move_vec.x = move_vec.x * main->window->delta_time * main->player.move_speed;
-		move_vec.y = move_vec.y * main->window->delta_time * main->player.move_speed;
+		move_vec.x = move_vec.x * main->window->delta_time \
+			* main->player.move_speed;
+		move_vec.y = move_vec.y * main->window->delta_time \
+			* main->player.move_speed;
 	}
 	hitbox_check(main, pos, move_vec);
 }

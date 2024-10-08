@@ -13,7 +13,7 @@ OBJ_DIR		:=	obj
 SRC_DIR 	:=	src
 
 ### UTILS #####################################################
-CFLAGS	:=	-Wall -Wextra -Werror -g #-fsanitize=address
+CFLAGS	:=	-Wall -Wextra -Werror -g -fsanitize=address
 RM		:=	rm -rf
 
 SRC 	:=	main.c \
@@ -22,11 +22,12 @@ SRC 	:=	main.c \
 			map_utils2.c \
 			map_utils3.c \
 			assets_parse.c	\
-			elements_utils2.c\
+			assets_parse2.c	\
 			setup_map.c \
 			setup_map_utils.c \
 			init.c \
 			utils.c \
+			utils2.c \
 			game_loop.c \
 			game_controls.c \
 			end.c \
@@ -37,6 +38,7 @@ SRC 	:=	main.c \
 			render.c \
 			parser_utils.c \
 			parser_utils2.c \
+			parser_utils3.c \
 			token.c
 
 OBJ		:=	$(patsubst %.c, $(OBJ_DIR)/%.o, $(SRC))

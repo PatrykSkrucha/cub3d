@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   game_loop.c                                        :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: ncornacc <ncornacc@student.codam.nl>         +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2024/07/17 11:56:13 by ncornacc      #+#    #+#                 */
-/*   Updated: 2024/07/17 12:41:56 by ncornacc      ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   game_loop.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/17 11:56:13 by ncornacc          #+#    #+#             */
+/*   Updated: 2024/10/08 16:16:23 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ bool	update_image_scale(t_main *main)
 		|| (uint32_t)main->window->height != main->image->height)
 	{
 		mlx_delete_image(main->window, main->image);
-		main->image = mlx_new_image(main->window, main->window->width, main->window->height);
+		main->image = mlx_new_image(main->window, main->window->width, \
+				main->window->height);
 		mlx_image_to_window(main->window, main->image, 0, 0);
 		main->image->instances[0].z = 0;
 		return (true);

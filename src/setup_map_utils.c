@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   setup_map_utils.c                                  :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: ncornacc <ncornacc@student.codam.nl>         +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2024/07/17 11:55:11 by ncornacc      #+#    #+#                 */
-/*   Updated: 2024/07/17 11:55:12 by ncornacc      ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   setup_map_utils.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/17 11:55:11 by ncornacc          #+#    #+#             */
+/*   Updated: 2024/10/08 16:34:39 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,5 @@ bool	determine_map_width(t_map *map)
 	}
 	map->width = max_width;
 	printf("width: %i\n", map->width);
-
 	return (true);
 }

@@ -6,14 +6,12 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:54:58 by ncornacc          #+#    #+#             */
-/*   Updated: 2024/10/08 15:52:29 by pskrucha         ###   ########.fr       */
+/*   Updated: 2024/10/08 16:32:55 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <cub3d.h>
 #include <stdbool.h>
-
-//calc width and height of map and checks as well if no empty row occurs in the map
 
 int	calc_matrix(t_main *main)
 {
@@ -98,43 +96,4 @@ void	fill_map(t_main *main, char *line)
 	else
 		main->map.str_map[i] = ptr_check(ft_strdup(line_no_nl));
 	free(line_no_nl);
-}
-
-bool   read_file(char *map_config, t_main *main)
-{
-	char			*line;
-	t_action_pars	action;
-
-	close(main->fd);
-	if (!open_file(map_config, main))
-		return (false);
-	while (1)
-	{
-		line = get_next_line(main->fd);
-		if (!line)
-			break ;
-		action = look_for_action(line, main);
-		if (action == EXIT)
-			error_exit("Error while parsing the map action exit");
-		else if (action == PARAMS)
-			make_assets(main, line);
-		else if (action == DO_MAP)
-			fill_map(main, line);
-		free(line);
-	}
-	fill_map(main, NULL);
-	close(main->fd);
-	return (true);
-}
-
-bool	validate_map(t_main *main)
-{
-	t_tile	p_tile;
-
-	if (main->map.px == -1)
-		return (error_msg("No Player Location\n", main), false);
-	p_tile = main->map.grid[main->map.py][main->map.px];
-	set_tiles(&main->map);
-	main->map.grid[main->map.py][main->map.px] = p_tile;
-	return (true);
 }

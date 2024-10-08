@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   utils.c                                            :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: ncornacc <ncornacc@student.codam.nl>         +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2024/07/17 11:56:18 by ncornacc      #+#    #+#                 */
-/*   Updated: 2024/07/17 13:06:01 by ncornacc      ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/17 11:56:18 by ncornacc          #+#    #+#             */
+/*   Updated: 2024/10/08 16:36:14 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ void	hitbox_check(t_main *main, t_vect pos, t_vect mv)
 		main->player.pos.x += mv.x;
 }
 
-
 float	deg_to_rad(float angle)
 {
 	return (angle * M_PI / 180.0);
@@ -71,4 +70,12 @@ t_vect	normalize_vec(t_vect vec)
 	vec.x = vec.x / c;
 	vec.y = vec.y / c;
 	return (vec);
+}
+
+void	error_exit(char *message)
+{
+	ft_putstr_fd("Error\n", 2);
+	ft_putstr_fd(message, 2);
+	ft_putstr_fd("\n", 2);
+	exit (1);
 }

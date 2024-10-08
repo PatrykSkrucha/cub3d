@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 15:46:22 by pskrucha          #+#    #+#             */
-/*   Updated: 2024/10/08 15:46:38 by pskrucha         ###   ########.fr       */
+/*   Updated: 2024/10/08 16:33:07 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,4 +71,43 @@ t_token_pars	check_token(char *line)
 	if (check_valid_char(str))
 		return (free(str), MAP);
 	return (free(str), ERROR);
+}
+
+bool	read_file(char *map_config, t_main *main)
+{
+	char			*line;
+	t_action_pars	action;
+
+	close(main->fd);
+	if (!open_file(map_config, main))
+		return (false);
+	while (1)
+	{
+		line = get_next_line(main->fd);
+		if (!line)
+			break ;
+		action = look_for_action(line, main);
+		if (action == EXIT)
+			error_exit("Error while parsing the map action exit");
+		else if (action == PARAMS)
+			make_assets(main, line);
+		else if (action == DO_MAP)
+			fill_map(main, line);
+		free(line);
+	}
+	fill_map(main, NULL);
+	close(main->fd);
+	return (true);
+}
+
+bool	validate_map(t_main *main)
+{
+	t_tile	p_tile;
+
+	if (main->map.px == -1)
+		return (error_msg("No Player Location\n", main), false);
+	p_tile = main->map.grid[main->map.py][main->map.px];
+	set_tiles(&main->map);
+	main->map.grid[main->map.py][main->map.px] = p_tile;
+	return (true);
 }

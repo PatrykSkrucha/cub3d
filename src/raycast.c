@@ -1,19 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   raycast.c                                          :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: ncornacc <ncornacc@student.codam.nl>         +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2024/07/17 11:55:26 by ncornacc      #+#    #+#                 */
-/*   Updated: 2024/07/17 12:51:45 by ncornacc      ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   raycast.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/17 11:55:26 by ncornacc          #+#    #+#             */
+/*   Updated: 2024/10/08 16:18:43 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <cub3d.h>
 #include <math.h>
 #include <stdint.h>
-
 
 void	init_step_and_side_dist(t_raycast *r, t_vect pos, t_vect raydir)
 {
@@ -99,7 +98,6 @@ t_raycast_info	cast_ray(t_vect pos, t_vect dir, t_map map)
 	return (inf);
 }
 
-
 void	set_distance(t_raycast *r)
 {
 	if (r->side == 0 && r->hit == 1)
@@ -108,18 +106,4 @@ void	set_distance(t_raycast *r)
 		r->perpwalldist = (r->sidedisty - r->deltadisty);
 	else
 		r->perpwalldist = 0;
-}
-
-void	set_hit_position(t_raycast *r, t_vect pos, t_vect raydir)
-{
-	if (r->hit == 0)
-	{
-		r->hit_pos = pos;
-		r->hit_pos = pos;
-	}
-	else
-	{
-		r->hit_pos.y = pos.y + r->perpwalldist * raydir.y;
-		r->hit_pos.x = pos.x + r->perpwalldist * raydir.x;
-	}
 }

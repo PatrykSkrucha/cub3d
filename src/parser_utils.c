@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser_utils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/08 16:33:32 by pskrucha          #+#    #+#             */
+/*   Updated: 2024/10/08 16:34:01 by pskrucha         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <cub3d.h>
 #define EXTENSION_LENGTH 4
 
@@ -50,7 +62,6 @@ bool	extension_check(char *map_path)
 bool	open_file(char *path, t_main *main)
 {
 	main->fd = open(path, O_RDONLY);
-
 	if (main->fd < 0)
 		return (false);
 	return (true);

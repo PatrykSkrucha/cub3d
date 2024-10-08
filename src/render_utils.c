@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   render_utils.c                                     :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: ncornacc <ncornacc@student.codam.nl>         +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2024/07/17 11:55:48 by ncornacc      #+#    #+#                 */
-/*   Updated: 2024/07/17 12:55:20 by ncornacc      ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   render_utils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/17 11:55:48 by ncornacc          #+#    #+#             */
+/*   Updated: 2024/10/08 16:29:05 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ bool	in_image(mlx_image_t *image, uint32_t x, uint32_t y)
 	return (x > 0 && x < image->width && y > 0 && y < image->height);
 }
 
-void	draw_line(mlx_image_t *image, t_vect cur, t_vect end, unsigned int color)
+void	draw_line(mlx_image_t *image, t_vect cur,
+				t_vect end, unsigned int color)
 {
 	int		dx;
 	int		dy;
@@ -76,5 +77,19 @@ void	draw_line(mlx_image_t *image, t_vect cur, t_vect end, unsigned int color)
 			cur.y += (float)dy / abs(dy);
 			cur.x += (float)dx / abs(dy);
 		}
+	}
+}
+
+void	set_hit_position(t_raycast *r, t_vect pos, t_vect raydir)
+{
+	if (r->hit == 0)
+	{
+		r->hit_pos = pos;
+		r->hit_pos = pos;
+	}
+	else
+	{
+		r->hit_pos.y = pos.y + r->perpwalldist * raydir.y;
+		r->hit_pos.x = pos.x + r->perpwalldist * raydir.x;
 	}
 }

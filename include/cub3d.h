@@ -6,10 +6,9 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:44:34 by ncornacc          #+#    #+#             */
-/*   Updated: 2024/10/08 16:09:37 by pskrucha         ###   ########.fr       */
+/*   Updated: 2024/10/08 20:01:12 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #ifndef CUB3D_H
 # define CUB3D_H
@@ -169,49 +168,24 @@ bool			open_file(char *path, t_main *main);
 bool			read_file(char *map_config, t_main *main);
 bool			setup_map(t_main *main);
 bool			validate_map(t_main *main);
-bool			check_assets_order(char **str_map);
 bool			extension_check(char *map_path);
 void			set_tiles(t_map *map);
-
-
 bool			valid_map_char(char c);
 bool			valid_map_str(char *str);
 int				map_start_index(char **map);
 bool			determine_map_height(t_map *map);
 bool			determine_map_width(t_map *map);
-
-bool			parse_assets(t_assets *elements, char **str_map);
-
 uint32_t		get_rgba(int r, int g, int b, int a);
 void			error_msg(const char *str, t_main *main);
-
-bool			north_parse(t_assets *texture, char *path);
-bool			south_parse(t_assets *texture, char *path);
-bool			east_parse(t_assets *texture, char *path);
-bool			west_parse(t_assets *texture, char *path);
-bool			ceiling_parse(t_assets *element, char *path);
-bool			floor_parse(t_assets *element, char *path);
-
-
 bool			game_init(t_main *main);
-
-
 bool			game_loop(t_main *main);
 void			game_controls(t_main *main);
-
-
 t_vect			rotate_vector(t_vect vec, float angle);
-
-
 bool			game_end(t_main *main);
-
-
 t_vect			move_vector(t_main *main);
 void			hitbox_check(t_main *main, t_vect pos, t_vect move_vec);
 void			update_mouse(double xdelta, double ydelta, void *param);
 void			toggle_hook(mlx_key_data_t keydata, void *param);
-
-
 void			draw_wall(uint32_t x, t_raycast_info r,
 					t_main *main, mlx_texture_t *text);
 mlx_texture_t	*get_texture(t_raycast_info *r, t_texture *textures);
@@ -220,14 +194,9 @@ void			render_single_frame(t_main *main);
 t_raycast_info	cast_ray(t_vect pos, t_vect dir, t_map map);
 void			draw_line(mlx_image_t *img,
 					t_vect p1, t_vect p2, unsigned int color);
-
 void			set_distance(t_raycast *r);
 void			set_hit_position(t_raycast *r, t_vect pos, t_vect raydir);
-
-
 t_vect			normalize_vec(t_vect vec);
-
-//parsing mess
 void			error_exit(char *message);
 void			double_free(char **str);
 void			*ptr_check(void *ptr);
@@ -237,7 +206,6 @@ char			*remove_nl(char *line);
 void			make_assets(t_main *main, char *line);
 int				calc_matrix(t_main *main);
 t_token_pars	check_token(char *line);
-int				open_fd(char *path);
 int				ft_isspace(int c);
 void			ft_2dfree(char **str);
 int				ft_2d_arrlen(char **str);
@@ -258,5 +226,16 @@ void			do_no_wall(t_main *main, char **args);
 void			do_so_wall(t_main *main, char **args);
 void			do_we_wall(t_main *main, char **args);
 void			do_ea_wall(t_main *main, char **args);
-
+bool			read_file(char *map_config, t_main *main);
+bool			validate_map(t_main *main);
+void			fill_map(t_main *main, char *line);
+void			error_exit(char *message);
+char			*strtrim_space_col(char	**str, int x, int height);
+char			*strtrim_space_row(char *s1);
+void			make_assets(t_main *main, char *line);
+int				strlen_no_ws_end(char *str);
+void			*ptr_check(void *ptr);
+void			double_free(char **str);
+void			error_msg(const char *str, t_main *main);
+void			preinit_main(t_main *main);
 #endif

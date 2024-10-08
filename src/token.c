@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 15:53:58 by pskrucha          #+#    #+#             */
-/*   Updated: 2024/10/08 15:56:32 by pskrucha         ###   ########.fr       */
+/*   Updated: 2024/10/08 16:34:54 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 static t_action_pars	check_next_step(t_main *main)
 {
-	if (!main->map.assets.ceiling || !main->map.assets.floor 
-		|| !main->map.assets.texture.north_wall 
-		|| !main->map.assets.texture.east_wall 
+	if (!main->map.assets.ceiling || !main->map.assets.floor
+		|| !main->map.assets.texture.north_wall
+		|| !main->map.assets.texture.east_wall
 		|| !main->map.assets.texture.south_wall
 		|| !main->map.assets.texture.west_wall)
 		return (PARAMS);
@@ -63,4 +63,3 @@ t_action_pars	look_for_action(char *line, t_main *main)
 		return (EXIT);
 	return (DO_MAP);
 }
-
