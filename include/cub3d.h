@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:44:34 by ncornacc          #+#    #+#             */
-/*   Updated: 2024/10/01 20:09:55 by pskrucha         ###   ########.fr       */
+/*   Updated: 2024/10/08 16:09:37 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,8 +165,8 @@ typedef struct s_main
 typedef bool	(*t_func) (t_assets *, char *);
 
 bool			parser(char *map_config, t_main *main);
-bool		    open_file(char *path, t_main *main);
-bool   			read_file(char *map_config, t_main *main);
+bool			open_file(char *path, t_main *main);
+bool			read_file(char *map_config, t_main *main);
 bool			setup_map(t_main *main);
 bool			validate_map(t_main *main);
 bool			check_assets_order(char **str_map);
@@ -230,25 +230,33 @@ t_vect			normalize_vec(t_vect vec);
 //parsing mess
 void			error_exit(char *message);
 void			double_free(char **str);
-void		*ptr_check(void *ptr);
-int			strlen_no_ws_end(char *str);
+void			*ptr_check(void *ptr);
+int				strlen_no_ws_end(char *str);
 t_action_pars	look_for_action(char *line, t_main *main);
-char		*remove_nl(char *line);
-void	do_params(t_main *main, char *line);
-int		calc_matrix(t_main *main);
+char			*remove_nl(char *line);
+void			make_assets(t_main *main, char *line);
+int				calc_matrix(t_main *main);
 t_token_pars	check_token(char *line);
-int	open_fd(char *path);
-int		ft_isspace(int c);
-void	ft_2dfree(char **str);
-int		ft_2d_arrlen(char **str);
-char	*remove_nl(char *line);
-char	*strjoin_free(char *to_free, char *str);
-bool	width_update(t_main *main, char *line);
-bool	extension_check(char *map_path);
-bool	open_file(char *path, t_main *main);
-int		ft_2d_arrlen(char **str);
-void	ft_2dfree(char **str);
-int		ft_isspace(int c);
-int		double_strlen(char **arr);
-char	**get_rgb(char **args);
+int				open_fd(char *path);
+int				ft_isspace(int c);
+void			ft_2dfree(char **str);
+int				ft_2d_arrlen(char **str);
+char			*remove_nl(char *line);
+char			*strjoin_free(char *to_free, char *str);
+bool			width_update(t_main *main, char *line);
+bool			extension_check(char *map_path);
+bool			open_file(char *path, t_main *main);
+int				ft_2d_arrlen(char **str);
+void			ft_2dfree(char **str);
+int				ft_isspace(int c);
+int				double_strlen(char **arr);
+char			**get_rgb(char **args);
+t_token_pars	check_token(char *line);
+t_token			which_asset(char *line);
+t_action_pars	look_for_action(char *line, t_main *main);
+void			do_no_wall(t_main *main, char **args);
+void			do_so_wall(t_main *main, char **args);
+void			do_we_wall(t_main *main, char **args);
+void			do_ea_wall(t_main *main, char **args);
+
 #endif

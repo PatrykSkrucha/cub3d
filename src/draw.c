@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   draw.c                                             :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: ncornacc <ncornacc@student.codam.nl>         +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2024/07/17 11:55:57 by ncornacc      #+#    #+#                 */
-/*   Updated: 2024/07/17 13:00:45 by ncornacc      ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   draw.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/17 11:55:57 by ncornacc          #+#    #+#             */
+/*   Updated: 2024/10/08 16:10:58 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ u_int32_t	parse_color(mlx_texture_t *tex, int x, int y, int alpha)
 	return (get_rgba(red, green, blue, alpha));
 }
 
-
 void	draw_wall(uint32_t x, t_raycast_info r,
 	t_main *main, mlx_texture_t *text)
 {
@@ -68,7 +67,8 @@ void	draw_wall(uint32_t x, t_raycast_info r,
 	d.lh = (main->image->width / r.perpwalldist) / main->fov;
 	d.start = (-d.lh / 2) + ((main->image->height)
 			/ 2 + (int)main->player.head_pitch);
-	d.end = (d.lh / 2) + ((main->image->height) / 2) + (int)main->player.head_pitch;
+	d.end = (d.lh / 2) + ((main->image->height) / 2)
+		+ (int)main->player.head_pitch;
 	d.wallx = get_wall_x(main, r);
 	d.texx = (double)(text->width * d.wallx);
 	y = d.start;

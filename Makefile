@@ -13,13 +13,14 @@ OBJ_DIR		:=	obj
 SRC_DIR 	:=	src
 
 ### UTILS #####################################################
-CFLAGS	:=	-Wall -Wextra -Werror -g -fsanitize=address
+CFLAGS	:=	-Wall -Wextra -Werror -g #-fsanitize=address
 RM		:=	rm -rf
 
 SRC 	:=	main.c \
 			parser.c \
 			map_utils.c \
-			map_utils1.c \
+			map_utils2.c \
+			map_utils3.c \
 			assets_parse.c	\
 			elements_utils2.c\
 			setup_map.c \
@@ -35,7 +36,8 @@ SRC 	:=	main.c \
 			render_utils.c \
 			render.c \
 			parser_utils.c \
-			parser_utils2.c
+			parser_utils2.c \
+			token.c
 
 OBJ		:=	$(patsubst %.c, $(OBJ_DIR)/%.o, $(SRC))
 SRC		:=	$(addprefix $(SRC_DIR)/,$(SRC))

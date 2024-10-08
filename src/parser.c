@@ -6,73 +6,11 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:55:06 by ncornacc          #+#    #+#             */
-/*   Updated: 2024/10/01 20:15:22 by pskrucha         ###   ########.fr       */
+/*   Updated: 2024/10/08 16:07:49 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <cub3d.h>
-
-t_token	what_params(char *line)
-{
-	if (!ft_strncmp(line, "C", ft_strlen(line)))
-		return (CEILING_COLOR);
-	if (!ft_strncmp(line, "F", ft_strlen(line)))
-		return (FLOOR_COLOR);
-	if (!ft_strncmp(line, "NO", ft_strlen(line)))
-		return (NORTH);
-	if (!ft_strncmp(line, "SO", ft_strlen(line)))
-		return (SOUTH);
-	if (!ft_strncmp(line, "WE", ft_strlen(line)))
-		return (WEST);
-	if (!ft_strncmp(line, "EA", ft_strlen(line)))
-		return (EAST);
-	return (-1);
-}
-
-void	do_no_wall(t_main *main, char **args)
-{
-	if (double_strlen(args) != 2)
-		error_exit("Error while parsing the map no wall");
-	if (main->map.assets.texture.north_wall)
-		error_exit("Error while parsing the map no wall");
-	main->map.assets.texture.north_wall = mlx_load_png(args[1]);
-	if (!main->map.assets.texture.north_wall)
-		error_exit("Error MLX NO wall");
-}
-
-void	do_so_wall(t_main *main, char **args)
-{
-	if (double_strlen(args) != 2)
-		error_exit("Error while parsing the map no wall");
-	if (main->map.assets.texture.south_wall)
-		error_exit("Error while parsing the map no wall");
-	main->map.assets.texture.south_wall = mlx_load_png(args[1]);
-	if (!main->map.assets.texture.south_wall)
-		error_exit("Error MLX SO wall");
-}
-
-void	do_we_wall(t_main *main, char **args)
-{
-	if (double_strlen(args) != 2)
-		error_exit("Error while parsing the map no wall");
-	if (main->map.assets.texture.west_wall)
-		error_exit("Error while parsing the map no wall");
-	main->map.assets.texture.west_wall = mlx_load_png(args[1]);
-	if (!main->map.assets.texture.west_wall)
-		error_exit("Error MLX WE wall");
-}
-
-void	do_ea_wall(t_main *main, char **args)
-{
-	if (double_strlen(args) != 2)
-		error_exit("Error while parsing the map no wall");
-	if (main->map.assets.texture.east_wall)
-		error_exit("Error while parsing the map no wall");
-	main->map.assets.texture.east_wall = mlx_load_png(args[1]);
-	if (!main->map.assets.texture.east_wall)
-		error_exit("Error MLX EA wall");
-}
-
 
 void	do_floor(t_main *main, char **args)
 {
@@ -106,7 +44,7 @@ void	do_ceiling(t_main *main, char **args)
 	double_free(rgb);
 }
 
-void	do_params(t_main *main, char *line)
+void	make_assets(t_main *main, char *line)
 {
 	char		**args;
 	t_token		params;
@@ -114,7 +52,7 @@ void	do_params(t_main *main, char *line)
 
 	line_no_nl = remove_nl(line);
 	args = ptr_check(ft_split(line_no_nl, ' '));
-	params = what_params(args[0]);
+	params = which_asset(args[0]);
 	if (params == CEILING_COLOR)
 		do_ceiling(main, args);
 	else if (params == FLOOR_COLOR)
@@ -129,41 +67,6 @@ void	do_params(t_main *main, char *line)
 		do_ea_wall(main, args);
 	free(line_no_nl);
 	double_free(args);
-}
-
-static t_action_pars	what_to_do(t_main *main)
-{
-	if (!main->map.assets.ceiling || !main->map.assets.floor 
-		|| !main->map.assets.texture.north_wall 
-		|| !main->map.assets.texture.east_wall 
-		|| !main->map.assets.texture.south_wall
-		|| !main->map.assets.texture.west_wall)
-		return (PARAMS);
-	return (DO_MAP);
-}
-
-t_action_pars	look_for_action(char *line, t_main *main)
-{
-	t_token_pars	token;
-	t_action_pars	expected_move;
-
-	token = check_token(line);
-	expected_move = what_to_do(main);
-	if (token == EMPTY_LINE && expected_move == PARAMS)
-		return (SKIP);
-	if (token == EMPTY_LINE && expected_move == DO_MAP)
-		return (SKIP);
-	if (token == MAP && expected_move == DO_MAP)
-		return (DO_MAP);
-	if (token == MAP && expected_move == PARAMS)
-		return (EXIT);
-	if (token == INFO && expected_move == DO_MAP)
-		return (EXIT);
-	if (token == INFO && expected_move == PARAMS)
-		return (PARAMS);
-	if (token == ERROR)
-		return (EXIT);
-	return (DO_MAP);
 }
 
 int	strlen_no_ws_end(char *str)
@@ -364,31 +267,6 @@ void	check_player(t_main *main)
 		error_exit("Player not found.");
 }
 
-int	open_fd(char *path)
-{
-	int	fd;
-
-	fd = open(path, O_RDONLY);
-	if (fd == -1)
-	{
-		close(fd);
-		error_exit("Can't access the map");
-	}
-	return (fd);
-}
-
-void printmap(char **str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		printf("%s\n", str[i]);
-		i++;
-	}
-}
-
 void   error_exit(char *message)
 {
        ft_putstr_fd("Error\n", 2);
@@ -409,84 +287,9 @@ bool	parser(char *map_config, t_main *main)
 	if (!read_file(map_config, main))
 		return (error_msg("Map reading allocation failed\n", main), false);
 	check_borders(main->map.str_map, main->map.height);
-	//check_player(main);
 	if (!setup_map(main))
 		return (false);
 	if (!validate_map(main))
 		return (false);
 	return (true);
 }
-
-t_token	string_to_token(char *str)
-{
-	if (!ft_strncmp(str, "NO", 3))
-		return (NORTH);
-	if (!ft_strncmp(str, "SO", 3))
-		return (SOUTH);
-	if (!ft_strncmp(str, "WE", 3))
-		return (WEST);
-	if (!ft_strncmp(str, "EA", 3))
-		return (EAST);
-	if (!ft_strncmp(str, "F", 2))
-		return (FLOOR_COLOR);
-	if (!ft_strncmp(str, "C", 2))
-		return (CEILING_COLOR);
-	return (UNKOWN);
-}
-
-t_func	select_token(t_token token)
-{
-	const t_func	functions[7] = {
-	[WEST] = west_parse,
-	[EAST] = east_parse,
-	[NORTH] = north_parse,
-	[SOUTH] = south_parse,
-	[FLOOR_COLOR] = floor_parse,
-	[CEILING_COLOR] = ceiling_parse,
-	};
-
-	return (functions[token]);
-}
-
-bool	parse_assets(t_assets *assets, char **str_map)
-{
-	char			**arr;
-	size_t			index;
-	t_func			function;
-	t_token			asset;
-
-	index = 0;
-	while (str_map[index] != NULL)
-	{
-		arr = ft_split(str_map[index], ' ');
-		if (!arr)
-			return (false);
-		asset = string_to_token(arr[0]);
-		if (asset != UNKOWN)
-		{
-			function = select_token(asset);
-			if (!function(assets, arr[1]))
-				return (ft_2dfree(arr), false);
-		}
-		ft_2dfree(arr);
-		index++;
-	}
-	return (true);
-}
-
-bool	check_assets_order(char **str_map)
-{
-	size_t	i;
-
-	i = map_start_index(str_map);
-	while (str_map[i] && valid_map_str(str_map[i]))
-		i++;
-	while (str_map[i])
-	{
-		if (str_map[i][0] != '\n')
-			return (false);
-		i++;
-	}
-	return (true);
-}
-

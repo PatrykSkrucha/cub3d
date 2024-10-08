@@ -6,73 +6,12 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:54:58 by ncornacc          #+#    #+#             */
-/*   Updated: 2024/10/01 20:21:46 by pskrucha         ###   ########.fr       */
+/*   Updated: 2024/10/08 15:52:29 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <cub3d.h>
 #include <stdbool.h>
-
-static int	check_valid_char(char *line)
-{
-	int		i;
-
-	i = 0;
-	while (line[i])
-	{
-		if (ft_isspace(line[i]) && line[i] != ' ')
-			error_exit("Space is only acceptable whitespace in map.");
-		if (!ft_strchr(" 01NSEA", line[i]))
-		{
-			printf("line: %s\n", line);
-			printf("char: >%c<\n", line[i]);
-			error_exit("Error while parsing the map wrong char map.");
-		}
-		i++;
-	}
-	return (1);
-}
-
-static int	check_line_info(char *line)
-{
-	char	**arr;
-	char	*cpy_str;
-
-	cpy_str = ptr_check(ft_strdup(line));
-	arr = ft_split(cpy_str, ' ');
-	free(cpy_str);
-	if (!ft_strncmp(arr[0], "C", ft_strlen(arr[0])))
-		return (double_free(arr), 1);
-	if (!ft_strncmp(arr[0], "F", ft_strlen(arr[0])))
-		return (double_free(arr), 1);
-	if (!ft_strncmp(arr[0], "NO", ft_strlen(arr[0])))
-		return (double_free(arr), 1);
-	if (!ft_strncmp(arr[0], "SO", ft_strlen(arr[0])))
-		return (double_free(arr), 1);
-	if (!ft_strncmp(arr[0], "WE", ft_strlen(arr[0])))
-		return (double_free(arr), 1);
-	if (!ft_strncmp(arr[0], "EA", ft_strlen(arr[0])))
-		return (double_free(arr), 1);
-	double_free(arr);
-	return (0);
-}
-
-t_token_pars	check_token(char *line)
-{
-	char	*str;
-	char	*str_trim;
-
-	str_trim = ft_strtrim(line, " ");
-	str = remove_nl(str_trim);
-	free(str_trim);
-	if (!str)
-		return (free(str), EMPTY_LINE);
-	if (check_line_info(str))
-		return (free(str), INFO);
-	if (check_valid_char(str))
-		return (free(str), MAP);
-	return (free(str), ERROR);
-}
 
 //calc width and height of map and checks as well if no empty row occurs in the map
 
@@ -178,7 +117,7 @@ bool   read_file(char *map_config, t_main *main)
 		if (action == EXIT)
 			error_exit("Error while parsing the map action exit");
 		else if (action == PARAMS)
-			do_params(main, line);
+			make_assets(main, line);
 		else if (action == DO_MAP)
 			fill_map(main, line);
 		free(line);
@@ -187,29 +126,6 @@ bool   read_file(char *map_config, t_main *main)
 	close(main->fd);
 	return (true);
 }
-
-//bool	flood_fill_validate(t_map *map, int y, int x)
-//{
-//	bool	ret;
-
-//	ret = true;
-//	if (x == 0 || y == 0 || x == map->width - 1
-//		|| y == map->height - 1 || map->grid[y][x] == SPACE)
-//		return (false);
-//	map->grid[y][x] = TEMP;
-//	if (x > 0 && map->grid[y][x - 1] != WALL && map->grid[y][x - 1] != TEMP)
-//		ret = flood_fill_validate(map, y, x - 1);
-//	if (ret && x < map->width && map->grid[y][x + 1] != WALL
-//			&& map->grid[y][x + 1] != TEMP)
-//		ret = flood_fill_validate(map, y, x + 1);
-//	if (ret && y > 0 && map->grid[y - 1][x] != WALL
-//			&& map->grid[y - 1][x] != TEMP)
-//		ret = flood_fill_validate(map, y - 1, x);
-//	if (ret && y < map->height && map->grid[y + 1][x] != WALL
-//			&& map->grid[y + 1][x] != TEMP)
-//		ret = flood_fill_validate(map, y + 1, x);
-//	return (ret);
-//}
 
 bool	validate_map(t_main *main)
 {
