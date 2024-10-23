@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 15:46:22 by pskrucha          #+#    #+#             */
-/*   Updated: 2024/10/08 20:33:12 by pskrucha         ###   ########.fr       */
+/*   Updated: 2024/10/22 21:17:28 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static int	check_valid_char(char *line, t_main *main)
 	{
 		if (ft_isspace(line[i]) && line[i] != ' ')
 			error_exit("Space is only acceptable whitespace in map.", main);
-		if (!ft_strchr(" 01NSEA", line[i]))
+		if (!ft_strchr(" 01NSEW", line[i]))
 		{
 			printf("line: %s\n", line);
 			printf("char: >%c<\n", line[i]);
@@ -88,7 +88,10 @@ bool	read_file(char *map_config, t_main *main)
 			break ;
 		action = look_for_action(line, main);
 		if (action == EXIT)
+		{
+			printf("hereeeeee exit\n");
 			error_exit("Error while parsing the map action exit", main);
+		}
 		else if (action == PARAMS)
 			make_assets(main, line);
 		else if (action == DO_MAP)
@@ -97,6 +100,8 @@ bool	read_file(char *map_config, t_main *main)
 	}
 	fill_map(main, NULL);
 	close(main->fd);
+	if (main->map.str_map[0] == NULL)
+		return (false);
 	return (true);
 }
 

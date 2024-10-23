@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:55:06 by ncornacc          #+#    #+#             */
-/*   Updated: 2024/10/08 20:28:15 by pskrucha         ###   ########.fr       */
+/*   Updated: 2024/10/22 16:08:40 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void	check_player(t_main *main)
 		j = 0;
 		while (main->map.str_map[i][j])
 		{
-			if (ft_strchr("NSEA", main->map.str_map[i][j]))
+			if (ft_strchr("NSEW", main->map.str_map[i][j]))
 			{
 				if (main->map.player)
 					error_exit("It's a single player game.", main);
@@ -107,6 +107,9 @@ bool	parser(char *map_config, t_main *main)
 	if (!open_file(map_config, main))
 		return (error_msg("File not accessible.\n", main), false);
 	main->map.height = calc_matrix(main);
+	if (main->map.height == -1)
+		return (error_msg("Error while parsing the map. Empty line\n", main), \
+				false);
 	main->map.str_map = ptr_check(ft_calloc(main->map.height + 1, \
 						sizeof(char *)));
 	if (!read_file(map_config, main))

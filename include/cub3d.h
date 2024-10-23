@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:44:34 by ncornacc          #+#    #+#             */
-/*   Updated: 2024/10/08 20:32:55 by pskrucha         ###   ########.fr       */
+/*   Updated: 2024/10/09 15:41:47 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,6 +205,7 @@ int				strlen_no_ws_end(char *str);
 t_action_pars	look_for_action(char *line, t_main *main);
 char			*remove_nl(char *line);
 void			make_assets(t_main *main, char *line);
+
 int				calc_matrix(t_main *main);
 // t_token_pars	check_token(char *line);
 int				ft_isspace(int c);

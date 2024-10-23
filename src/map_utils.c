@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:54:58 by ncornacc          #+#    #+#             */
-/*   Updated: 2024/10/08 20:33:05 by pskrucha         ###   ########.fr       */
+/*   Updated: 2024/10/22 16:05:18 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	calc_matrix(t_main *main)
 			break ;
 		token = check_token(line, main);
 		if (matrix_check && prev_token == EMPTY_LINE && token == MAP)
-			return (error_msg("Error while parsing the map.\n", main), -1);
+			return (free(line), -1);
 		if (token == MAP)
 			matrix_check = width_update(main, line);
 		if (token == MAP)

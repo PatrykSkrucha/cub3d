@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 18:56:31 by pskrucha          #+#    #+#             */
-/*   Updated: 2024/10/08 20:34:29 by pskrucha         ###   ########.fr       */
+/*   Updated: 2024/10/09 17:22:15 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,4 +67,5 @@ void	preinit_main(t_main *main)
 	main->map.assets.texture.north_wall = NULL;
 	main->map.assets.texture.west_wall = NULL;
 	main->map.assets.texture.south_wall = NULL;
+	main->map.str_map = NULL;
 }

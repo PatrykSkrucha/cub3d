@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 15:53:58 by pskrucha          #+#    #+#             */
-/*   Updated: 2024/10/08 20:34:41 by pskrucha         ###   ########.fr       */
+/*   Updated: 2024/10/22 21:20:05 by pskrucha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,17 +25,17 @@ static t_action_pars	check_next_step(t_main *main)
 
 t_token	which_asset(char *line)
 {
-	if (!ft_strncmp(line, "C", ft_strlen(line)))
+	if (!ft_strncmp(line, "C", ft_strlen(line)) && !ft_strncmp("C", line, 1))
 		return (CEILING_COLOR);
-	if (!ft_strncmp(line, "F", ft_strlen(line)))
+	if (!ft_strncmp(line, "F", ft_strlen(line)) && !ft_strncmp("F", line, 1))
 		return (FLOOR_COLOR);
-	if (!ft_strncmp(line, "NO", ft_strlen(line)))
+	if (!ft_strncmp(line, "NO", ft_strlen(line)) && !ft_strncmp("NO", line, 2))
 		return (NORTH);
-	if (!ft_strncmp(line, "SO", ft_strlen(line)))
+	if (!ft_strncmp(line, "SO", ft_strlen(line)) && !ft_strncmp("SO", line, 2))
 		return (SOUTH);
-	if (!ft_strncmp(line, "WE", ft_strlen(line)))
+	if (!ft_strncmp(line, "WE", ft_strlen(line)) && !ft_strncmp("WE", line, 2))
 		return (WEST);
-	if (!ft_strncmp(line, "EA", ft_strlen(line)))
+	if (!ft_strncmp(line, "EA", ft_strlen(line)) && !ft_strncmp("EA", line, 2))
 		return (EAST);
 	return (-1);
 }
@@ -56,10 +56,17 @@ t_action_pars	look_for_action(char *line, t_main *main)
 	if (token == MAP && expected_move == PARAMS)
 		return (EXIT);
 	if (token == INFO && expected_move == DO_MAP)
+	{
+		printf("token error\n");
+			
 		return (EXIT);
+	}
 	if (token == INFO && expected_move == PARAMS)
 		return (PARAMS);
 	if (token == ERROR)
+	{
 		return (EXIT);
+	}
+	printf("do map\n");
 	return (DO_MAP);
 }

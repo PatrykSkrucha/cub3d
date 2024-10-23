@@ -1,11 +1,12 @@
 ### VAR #######################################################
-NAME		:=	cub3d
+NAME		:=	cub3D
 
 DEBUGGING	?=
 
 LIBS		:=	./libft/libft.a
 MLX			?=	./MLX42
 MLXLIB		:= $(MLX)/build/libmlx42.a
+HEADER3D	:=	include/cub3d.h
 HEADER		:=	-Ilibft -Iinclude -I$(MLX)/include/MLX42
 
 HEADERS		:=	libft/libft.h include/cub3d.h include/struct.h $(MLX)/include/MLX42/MLX42.h
@@ -13,7 +14,7 @@ OBJ_DIR		:=	obj
 SRC_DIR 	:=	src
 
 ### UTILS #####################################################
-CFLAGS	:=	-Wall -Wextra -Werror -g #-fsanitize=address
+CFLAGS	:=	-Wall -Wextra -Werror -g -Ofast -fsanitize=address
 RM		:=	rm -rf
 
 SRC 	:=	main.c \
@@ -68,12 +69,13 @@ $(NAME): $(OBJ) $(LIBS)
 	@$(CC) $^ $(LIBS) $(MLXLIB) $(CFLAGS) -o $(NAME)
 	@printf "$(GREEN) $(BOLD)======= Created program $(NAME) ======= $(RESET)\n"
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(HEADER3D)
 	@mkdir -p $(@D)
 	@$(CC) $(CFLAGS) $(HEADER) -c $< -o $@
 	@printf "$(YELLOW) $(BOLD)Compiling... $(RESET) $(notdir $<)\n"
 
 $(LIBS):
+	make mlx
 	make -C libft
 
 mlx:
@@ -86,11 +88,11 @@ clean:
 
 fclean: clean
 	@$(RM) -rf $(NAME)
+	@$(RM) -rf MLX42/build
+	make fclean -C libft
 	@printf "$(RED) $(BOLD) Deleting $(NAME)... $(RESET)\n"
 
-deepclean: fclean
-	@$(RM) $(MLX)/build
 
 re: fclean all
 
-.PHONY: clean all fclean re deepclean
+.PHONY: clean all fclean re
