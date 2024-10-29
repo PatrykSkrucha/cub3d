@@ -6,7 +6,7 @@
 /*   By: pskrucha <pskrucha@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/10/08 15:53:58 by pskrucha      #+#    #+#                 */
-/*   Updated: 2024/10/28 12:00:42 by ncornacc      ########   odam.nl         */
+/*   Updated: 2024/10/29 11:14:37 by ncornacc      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,17 +56,10 @@ t_action_pars	look_for_action(char *line, t_main *main)
 	if (token == MAP && expected_move == PARAMS)
 		return (EXIT);
 	if (token == INFO && expected_move == DO_MAP)
-	{
-		printf("token error\n");
-			
 		return (EXIT);
-	}
 	if (token == INFO && expected_move == PARAMS)
 		return (PARAMS);
 	if (token == ERROR)
-	{
 		return (EXIT);
-	}
-	printf("do map\n");
 	return (DO_MAP);
 }

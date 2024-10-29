@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   map_utils3.c                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: pskrucha <pskrucha@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/08 15:46:22 by pskrucha          #+#    #+#             */
-/*   Updated: 2024/10/22 21:17:28 by pskrucha         ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   map_utils3.c                                       :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: pskrucha <pskrucha@student.42.fr>            +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/10/08 15:46:22 by pskrucha      #+#    #+#                 */
+/*   Updated: 2024/10/29 11:13:40 by ncornacc      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,10 +88,7 @@ bool	read_file(char *map_config, t_main *main)
 			break ;
 		action = look_for_action(line, main);
 		if (action == EXIT)
-		{
-			printf("hereeeeee exit\n");
 			error_exit("Error while parsing the map action exit", main);
-		}
 		else if (action == PARAMS)
 			make_assets(main, line);
 		else if (action == DO_MAP)
