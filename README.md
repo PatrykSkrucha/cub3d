@@ -3,13 +3,13 @@
 > The scene parser and map validator for a **raycasting game engine** inspired by early first-person shooters, written in C.
 
 ![C](https://img.shields.io/badge/C-00599C?style=flat&logo=c&logoColor=white)
-![MLX42](https://img.shields.io/badge/graphics-MLX42-555555?style=flat)
+[![MLX42](https://img.shields.io/badge/graphics-MLX42-555555?style=flat)](https://github.com/codam-coding-college/MLX42)
 
 ## About
 
 cub3d reads a `.cub` scene file describing the textures, colours and map of a 3D maze and makes sure
 it is valid before anything gets rendered. This repository contains that parsing and validation layer.
-The MLX42 graphics library is included for the rendering part.
+The [MLX42](https://github.com/codam-coding-college/MLX42) graphics library is included for the rendering part.
 
 ## What gets checked
 
